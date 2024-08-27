@@ -1,6 +1,503 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&display=swap');
+// MainPage
+// │
+// ├── mainContainer
+// │   └── app
+// │       ├── box
+// │       │   ├── Tabs
+// │       │   └── cards
+// │       │       ├── Tasks
+// │       │       │   ├── Form
+// │       │       │   │   ├── input
+// │       │       │   │   └── button
+// │       │       │   └── cardBox
+// │       │       │       └── cardItem (multiple items)
+// │       │       └── details
+// │       │           ├── title
+// │       │           ├── Memoirs (commented out)
+// │       │           │   └── Container div
+// │       │           │       └── memoir (multiple items)
+// │       │           └── Habits (commented out)
+// │       │               └── Container div
+// │       │                   └── habit
+// │       │                       ├── name
+// │       │                       ├── count
+// │       │                       ├── goal
+// │       │                       └── HabitCircles
+// │       └── imageBox
+// │           └── image
+// │
+// Tabs
+// └── tabs
+//     └── tab (multiple buttons)
 
-html, 
-body {
-  font-family: 'Montserrat', sans-serif;
+// ╔══════════════════════╗
+// ║   General Styles     ║
+// ╚══════════════════════╝
+
+$background-color: rgb(21, 21, 21);
+$input-background: rgb(23, 23, 23);
+$text-color: white;
+$card-bg: rgba(18, 18, 18, 0);
+$card-blur: calc(1vh + 1vw);
+$card-padding: calc(1vh + 1vw);
+$card-margin: calc(0.5vh + 0.5vw);
+$border-radius: calc(0.5vh + 0.5vw);
+$card-width: calc(15vh + 15vw);
+$font-size: calc(0.1vh + 0.1vw);
+$image-opacity: 0.5;
+$blur-filter: calc(1vh + 1vw);
+
+html, body, h1, h2, h3, p {
+  margin: 0;
+  padding: 0;
+  color: $text-color;
+}
+
+@font-face {
+  font-family: lemon;
+  src: url(/public/LEMONMILK-Medium.otf);
+}
+
+* {
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  font-family: lemon;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+
+// ╔══════════════════════╗
+// ║   Main Container     ║
+// ╚══════════════════════╝
+
+.mainContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; 
+}
+
+// ╔═══════════════════╗
+// ║   App Container   ║
+// ╚═══════════════════╝
+
+.app {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(32, 32, 32);
+}
+
+// ╔════════════════════════╗
+// ║   ImageBox Container   ║
+// ╚════════════════════════╝
+
+.imageBox {
+  position: relative;
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+  .imageOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: $image-opacity;
+    filter: blur($blur-filter);
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+// ╔═══════════════════╗     // ╔═════════════════════╗
+// ║   Box Container   ║     // ║   Cards Container   ║
+// ╚═══════════════════╝     // ╚═════════════════════╝
+
+.box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
+
+  .tabs {
+    display: flex;
+    justify-content: space-evenly;
+    background-color: rgba(0, 0, 0, 0);
+    color: $text-color;
+  }
+
+  .cards {
+    display: flex;
+    max-height: 100%;
+    overflow: hidden;
+
+    .cardBox, .memoirBox {
+      display: flex;
+      flex-direction: column;
+      height: calc(23vh + 23vw);
+      overflow-y: scroll;
+    }
+  }
+}
+
+
+// ╔═══════════╗
+// ║   Tasks   ║
+// ╚═══════════╝
+
+.tasks {
+  width: 50%;
+  padding: calc(2vh + 2vw);
+
+  .input {
+    background-color: $input-background;
+    width: max-content;
+    border: none;
+    border-radius: $border-radius 0 0 $border-radius;
+    padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+    margin: calc(1vh + 1vw) 0;
+  }
+
+  .cardBox, .memoirBox {
+    overflow-y: scroll;
+  }
+
+  .card {
+    display: flex;
+    background-color: $card-bg;
+    padding: $card-padding;
+    margin: $card-margin 0;
+    border-radius: $border-radius;
+    width: 100%;
+    font-size: $font-size;
+    border: calc(0.1vh + 0.1vw) solid pink;
+    text-align: left;
+    color: $text-color;
+  }
+}
+
+.cardInput {
+  width: max-content;
+  display: flex;
+  background-color: $card-bg;
+  padding: $card-padding;
+  margin: $card-margin 0;
+  border-radius: $border-radius;
+  font-size: $font-size;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  text-align: left;
+  color: $text-color;
+}
+
+.star {
+  margin-right: calc(1vh + 1vw);
+}
+
+.star, h1 {
+  text-shadow: 0 0 calc(1vh + 1vw) pink;
+
+}
+
+// ╔═════════════╗
+// ║   Details   ║
+// ╚═════════════╝
+
+.detailsBox {
+  width: 50%;
+  padding: calc(2vh + 2vw) calc(2vh + 2vw) calc(1vh + 1vw) calc(2vh + 2vw);
+  border-left: calc(0.1vh + 0.1vw) solid $input-background;
+  display: flex;
+  flex-direction: column;
+
+  .memoirInput {
+    display: flex;
+    background-color: $card-bg;
+    padding: $card-padding;
+    margin: $card-margin 0;
+    border-radius: $border-radius;
+    border: calc(0.1vh + 0.1vw) solid pink;
+    width: max-content;
+    font-size: $font-size;
+    text-align: left;
+    color: $text-color;
+  }
+
+  .memoir {
+    display: flex;
+    background-color: $card-bg;
+    padding: $card-padding;
+    margin: $card-margin 0;
+    border-radius: $border-radius;
+    border: calc(0.1vh + 0.1vw) solid pink;
+    width: 100%;
+    font-size: $font-size;
+    text-align: left;
+    color: $text-color;
+  }
+
+}
+
+
+// ╔══════════════════════╗
+// ║   Other Elements     ║
+// ╚══════════════════════╝
+
+.App-logo {
+  display: none;
+}
+
+.input {
+  background-color: $input-background;
+  border: none;
+  border-radius: $border-radius 0 0 $border-radius;
+  padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+  margin: calc(1vh + 1vw) 0;
+}
+
+.submit {
+  background-color: $input-background;
+  border-radius: 0 $border-radius $border-radius 0;
+  padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+  border: none;
+  color: white;
+}
+
+// ╔══════════╗
+// ║   Tabs   ║
+// ╚══════════╝
+
+.tab {
+  background-color: rgb(27, 27, 27);
+  backdrop-filter: blur(calc(1vh + 1vw));
+  border: none;
+  border-radius: calc(0.5vh + 0.5vw);
+  width: fit-content;
+  padding: calc(0.5vh + 0.5vw) calc(2vh + 2vw);
+  margin: calc(0.5vh + 0.5vw);
+  color: white;
+  text-shadow: 0 0 calc(0.5vh + 0.5vw) pink;
+}
+
+.buttons {
+  display: flex;
+}
+
+.tabs {
+  background-color: rgb(27, 27, 27);
+  backdrop-filter: blur(calc(1vh + 1vw));
+  border: none;
+  color: white;
+  text-shadow: 0 0 calc(0.5vh + 0.5vw) pink;
+}
+
+// ╔═════════════╗
+// ║   Circles   ║
+// ╚═════════════╝
+
+.circleBox {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0;
+  padding: calc(1vh + 1vw);
+}
+
+.circles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill);
+  grid-template-rows: repeat(5, calc(1vh + 1vw));
+  gap: calc(0.3vh + 0.3vw);
+  grid-auto-flow: column;
+  width: calc(1vh + 1vw);
+}
+
+.circ {
+  width: calc(1vh + 1vw);
+  height: calc(1vh + 1vw);
+  border-radius: calc(0.3vh + 0.3vw);
+}
+
+.habitBox {
+  overflow-y: scroll;
+  margin: calc(1vh + 1vw) 0;
+}
+
+.details {
+  height: 100%;
+}
+
+.habitName {
+  font-size: calc(1.5vh + 1.5vw);
+  padding: calc(0.5vh + 0.5vw);
+}
+
+.habitDet {
+  padding: 0 calc(0.5vh + 0.5vw);
+}
+
+.habitDetsBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.habitButton {
+  background-color: white;
+  box-shadow: 0 0 calc(1vh + 1vw) pink;
+  border: none;
+  border-radius: calc(0.5vh + 0.5vw);
+  padding: calc(0.2vh + 0.2vw) calc(0.6vh + 0.6vw);
+  margin: calc(0.5vh + 0.5vw);
+  color: rgb(255, 118, 216);
+  font-size: calc(1vh + 1vw);
+}
+
+.tasksForm {
+  display: flex;
+}
+
+.memoirFormBox {
+  display: flex;
+}
+
+.submitButton {
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-left: calc(1vh + 1vw);
+}
+
+.addHabitButton {
+  text-shadow: 0 0 calc(1vh + 1vw) pink;
+  font-size: calc(1vh + 1vw);
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: calc(2vh + 2vw);
+}
+
+.habitForm {
+  margin: calc(0.5vh + 0.5vw); 
+  padding: calc(1vh + 1vw);
+  border-radius: $border-radius;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.habitInput {
+  display: flex;
+  background-color: $card-bg;
+  padding: calc(0.5vh + 0.5vw);
+  margin: calc(0.5vh + 0.5vw) 0; 
+  border-radius: $border-radius;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  width: max-content;
+  font-size: $font-size;
+  text-align: left;
+  color: $text-color;
+}
+
+.habitSubmit {
+  background-color: white;
+  box-shadow: 0 0 10px #ff76d8;
+  border: none;
+  border-radius: calc(0.5vh + 0.5vw);
+  padding: calc(0.2vh + 0.2vw) calc(0.6vh + 0.6vw);
+  margin: calc(0.5vh + 0.5vw);
+  color: rgb(91, 91, 91);
+  font-size: calc(1vh + 1vw);
+}
+
+.habitText {
+  font-size: calc(1vh + 1vw);
+}
+
+.habitGoal, .habitColor, .habitNameBox {
+
+  display: flex;
+  align-items: center;
+}
+
+.habitColorInput {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: calc(1vh + 1vw);
+  width:  calc(2vh + 2vw);
+  height:  calc(1.5vh + 1.5vw);
+  padding:  0;
+  cursor: pointer; 
+  appearance: none; 
+  margin-left: calc(1vh + 1vw);
+}
+
+.goalText {
+  margin-left: calc(1vh + 1vw);
+}
+
+.habitColorInput::-webkit-color-swatch-wrapper {
+  padding:  calc(1vh + 1vw);
+  border-radius: calc(1vh + 1vw);
+}
+
+.habitColorInput::-webkit-color-swatch {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: calc(1vh + 1vw);
+}
+
+.habitColorInput::-moz-color-swatch {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: calc(1vh + 1vw);
+}
+
+.deleteHabitButton {
+  text-shadow: 0 0 calc(1vh + 1vw) pink;
+  font-size: calc(2vh + 2vw);
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+.deleteHabitButton2 {
+  text-shadow: 0 0 calc(1vh + 1vw) pink;
+  font-size: calc(1vh + 1vw);
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+.habitTitleBox {
+  display: flex;
+  align-items: center;
+}
+
+.buttonBoxes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+input {
+  color: white;
+}
+
+input:focus {
+  outline: white; 
+  border: none;
 }
