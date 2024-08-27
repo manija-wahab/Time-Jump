@@ -3,14 +3,17 @@ import request from 'superagent'
 import { Memoir } from '../../models/memoir'
 import { useState } from 'react'
 
-const Memoirs = () => {
+interface memoirFormProps {
+  themeColor: string
+}
+
+const Memoirs = ({ themeColor }: memoirFormProps) => {
   const [memoirContent, setMemoirContent] = useState('')
   const [editMemoirId, setEditMemoirId] = useState<number | null>(null)
   const [text, setText] = useState('')
 
   const queryClient = useQueryClient()
 
-  // Fetching the memoirs
   const { data, isPending, isError } = useQuery({
     queryKey: ['memoirs'],
     queryFn: async () => {
@@ -47,6 +50,9 @@ const Memoirs = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['memoirs'] })
+    },
+    onError: (error) => {
+      console.error('Update failed:', error)
     },
   })
 
@@ -103,11 +109,12 @@ const Memoirs = () => {
                   value={text}
                   onChange={handleCardChange}
                   className="memoirInput"
+                  style={{ borderColor: `${themeColor}` }}
                 />
                 <div className="buttonBoxes">
                   <button
                     className="submitButton"
-                    type="submit"
+                    type="button"
                     onClick={() =>
                       updateMutation.mutate({ id: editMemoirId, content: text })
                     }
@@ -127,9 +134,17 @@ const Memoirs = () => {
               <button
                 className="memoir"
                 onClick={() => handleClick(memoir.id, memoir.content)}
+                style={{ borderColor: `${themeColor}` }}
               >
-                <div className="star">✦</div>
-                <div>{memoir.content}</div>
+                <div
+                  className="star"
+                  style={{
+                    textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
+                  }}
+                >
+                  ✦
+                </div>
+                <div className="memoirContent">{memoir.content}</div>
               </button>
             )}
           </div>

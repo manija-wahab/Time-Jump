@@ -1,15 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import request from 'superagent'
-import { Habit } from '../../models/habits'
+import { Habit } from '../../models/habit'
 import { useState } from 'react'
 
 const Habits = () => {
-  const [deleteDisplay, setDeleteDisplay] = useState(false)
+  const [deleteDisplay, setDeleteDisplay] = useState<Record<number, boolean>>(
+    {},
+  )
   const queryClient = useQueryClient()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['habits'],
     queryFn: async () => {
-      const response = await request.get('/api/v1/ahabits')
+      const response = await request.get('/api/v1/habits')
       return response.body as Habit[]
     },
   })
@@ -44,26 +46,43 @@ const Habits = () => {
     },
   })
 
+  const toggleDeleteDisplay = (id: number) => {
+    setDeleteDisplay((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error loading cards</div>
+
+  //    style={{ textShadow: ` 0 0 calc(1vh + 1vw) ${habit.color}` }}
 
   return (
     <div className="habitBox">
       {data?.map((habit: Habit) => (
-        <div key={habit.id}>
+        <div key={habit.id} className="habitSection">
           <div className="habitNameBox">
-            <h1 className="habitName">{habit.name}</h1>
+            <h1 className="habitName" style={{ textShadow: `none` }}>
+              {habit.name}
+            </h1>
             <button
+              style={{ textShadow: ` 0 0 calc(0.5vh + 0.5vw) ${habit.color}` }}
               className="deleteHabitButton"
-              onClick={() => setDeleteDisplay(true)}
+              onClick={() => toggleDeleteDisplay(habit.id)}
             >
               ✦
             </button>
-            {deleteDisplay && (
+            {deleteDisplay[habit.id] && (
               <button
+                style={{ textShadow: ` 0 0 calc(1vh + 1vw) ${habit.color}` }}
                 className="deleteHabitButton2"
                 onClick={() => {
-                  deleteHabit.mutate(habit.id), setDeleteDisplay(false)
+                  deleteHabit.mutate(habit.id)
+                  setDeleteDisplay((prev) => ({
+                    ...prev,
+                    [habit.id]: false,
+                  }))
                 }}
               >
                 Delete
@@ -79,12 +98,20 @@ const Habits = () => {
             <div className="habitButtonsBox">
               <button
                 className="habitButton"
+                style={{
+                  boxShadow: ` 0 0 calc(0.5vh + 0.5vw) ${habit.color}`,
+                  color: `${habit.color}`,
+                }}
                 onClick={() => mutateLess.mutate(habit.id)}
               >
                 -
               </button>
               <button
                 className="habitButton"
+                style={{
+                  boxShadow: ` 0 0 calc(0.5vh + 0.5vw) ${habit.color}`,
+                  color: `${habit.color}`,
+                }}
                 onClick={() => mutation.mutate(habit.id)}
               >
                 +
@@ -104,7 +131,9 @@ const Habits = () => {
                         ? 'white'
                         : 'rgba(255, 255, 255, 0.324)',
                     boxShadow:
-                      index < habit.count ? `0 0 10px ${habit.color}` : 'none',
+                      index < habit.count
+                        ? `0 0 calc(0.5vh + 0.5vw) ${habit.color}`
+                        : 'none',
                   }}
                 />
               ))}

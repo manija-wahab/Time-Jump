@@ -1,6 +1,7 @@
 import { Router } from 'express'
-import * as db from '../db/habits.ts'
-import { NewHabit } from '../../models/habit.ts'
+import { NewTheme } from '../../models/theme.ts'
+
+import * as db from '../db/themes.ts'
 
 const router = Router()
 
@@ -10,8 +11,8 @@ const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const habits = await db.getAllHabits()
-    res.json(habits)
+    const themes = await db.getAllThemes()
+    res.json(themes)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -25,8 +26,8 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const content = req.body
-    const newHabit = await db.addNewHabit(content)
-    res.json(newHabit)
+    const newTheme = await db.addNewTheme(content)
+    res.json(newTheme)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -40,35 +41,13 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { name, goal } = req.body
-    const updatedHabit: Partial<NewHabit> = {
-      name,
-      goal,
+    const { image, color } = req.body
+    const editedTheme: NewTheme = {
+      image,
+      color,
     }
-    const habit = await db.editHabit(id, updatedHabit)
-    res.json(habit)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Something went wrong' })
-  }
-})
-
-router.patch('/:id/increment', async (req, res) => {
-  try {
-    const id = parseInt(req.params.id, 10)
-    const habit = await db.incrementHabitCount(id)
-    res.json(habit[0])
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Something went wrong' })
-  }
-})
-
-router.patch('/:id/decrement', async (req, res) => {
-  try {
-    const id = parseInt(req.params.id, 10)
-    const habit = await db.decrementHabitCount(id)
-    res.json(habit[0])
+    const updatedTheme = await db.editTheme(id, editedTheme)
+    res.json(updatedTheme)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -82,7 +61,7 @@ router.patch('/:id/decrement', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteHabit(id)
+    await db.deleteTheme(id)
     res.status(204).send()
   } catch (error) {
     console.error(error)

@@ -1,5 +1,5 @@
 import connection from './connection.ts'
-import { Habit, NewHabit } from '../../models/habits.ts'
+import { Habit, NewHabit } from '../../models/habit.ts'
 
 // ╔════════════════╗
 // ║   Get Routes   ║

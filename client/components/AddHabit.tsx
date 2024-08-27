@@ -1,18 +1,23 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import request from 'superagent'
-import { NewHabit } from '../../models/habits'
+import { NewHabit } from '../../models/habit'
 import React, { useState } from 'react'
 
 interface AddHabitProps {
   displayForm: boolean
   setDisplayForm: React.Dispatch<React.SetStateAction<boolean>>
+  themeColor: string
 }
 
-const AddHabit = ({ displayForm, setDisplayForm }: AddHabitProps) => {
+const AddHabit = ({
+  displayForm,
+  setDisplayForm,
+  themeColor,
+}: AddHabitProps) => {
   const queryClient = useQueryClient()
   const [habitName, setHabitName] = useState('')
   const [habitGoal, setHabitGoal] = useState<number | ''>('')
-  const [habitColor, setHabitColor] = useState('#ffffff') // Default color
+  const [habitColor, setHabitColor] = useState('#ffffff')
 
   const mutation = useMutation({
     mutationFn: async (newHabit: NewHabit) => {
@@ -39,7 +44,7 @@ const AddHabit = ({ displayForm, setDisplayForm }: AddHabitProps) => {
 
   const handleGoalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
-    setHabitGoal(value === '' ? '' : Number(value)) // Handle empty input
+    setHabitGoal(value === '' ? '' : Number(value))
   }
 
   const handleHabitColor = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,10 +54,15 @@ const AddHabit = ({ displayForm, setDisplayForm }: AddHabitProps) => {
   return (
     <div>
       {displayForm && (
-        <form onSubmit={handleSubmit} className="habitForm">
+        <form
+          onSubmit={handleSubmit}
+          className="habitForm"
+          style={{ borderColor: `${themeColor}` }}
+        >
           <p className="habitText">Add A New Habit</p>
           <p className="habitText">Habit Name:</p>
           <input
+            style={{ borderColor: `${themeColor}` }}
             value={habitName}
             className="habitInput"
             onChange={handleNameChange}
@@ -61,9 +71,10 @@ const AddHabit = ({ displayForm, setDisplayForm }: AddHabitProps) => {
           <p className="habitText">Goal: </p>
           <div className="habitGoal">
             <input
+              style={{ borderColor: `${themeColor}` }}
               className="habitInput"
               type="number"
-              value={habitGoal === '' ? '' : habitGoal} // Handle empty input
+              value={habitGoal === '' ? '' : habitGoal}
               onChange={handleGoalChange}
               placeholder="Habit Goal"
             />
@@ -76,13 +87,28 @@ const AddHabit = ({ displayForm, setDisplayForm }: AddHabitProps) => {
               value={habitColor}
               onChange={handleHabitColor}
               className="habitColorInput"
+              style={{ borderColor: `${themeColor}` }}
             />
           </div>
 
-          <button className="habitSubmit" type="submit">
+          <button
+            className="habitSubmit"
+            type="submit"
+            style={{
+              boxShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
+              color: `${themeColor}`,
+            }}
+          >
             Add Habit
           </button>
-          <button className="habitSubmit" onClick={() => setDisplayForm(false)}>
+          <button
+            className="habitSubmit"
+            onClick={() => setDisplayForm(false)}
+            style={{
+              boxShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
+              color: `${themeColor}`,
+            }}
+          >
             cancel
           </button>
         </form>

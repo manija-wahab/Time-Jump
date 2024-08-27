@@ -5,9 +5,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 interface TaskFormProps {
   type: string
+  themeColor: string
+  themeImage: string
 }
+// style={{textShadow: `0 0 calc(1vh + 1vw) ${themeColor}`}}
+// { themeColor, onTabClick }: TabsProps
 
-const Tasks = ({ type }: TaskFormProps) => {
+const Tasks = ({ themeColor, type }: TaskFormProps) => {
   const [task, setTask] = useState('')
   const [editCardId, setEditCardId] = useState<number | null>(null)
   const [text, setText] = useState('')
@@ -78,7 +82,9 @@ const Tasks = ({ type }: TaskFormProps) => {
 
   return (
     <div className="tasks">
-      <h1>{type} ✦</h1>
+      <h1 style={{ textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}` }}>
+        {type} ✦
+      </h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -99,6 +105,7 @@ const Tasks = ({ type }: TaskFormProps) => {
               <div>
                 <form onSubmit={handleSubmit} className="tasksForm">
                   <input
+                    style={{ borderColor: `${themeColor}` }}
                     type="text"
                     value={text}
                     onChange={handleCardChange}
@@ -122,9 +129,17 @@ const Tasks = ({ type }: TaskFormProps) => {
               <button
                 className="card"
                 onClick={() => handleClick(card.id, card.content)}
+                style={{ borderColor: `${themeColor}` }}
               >
-                <div className="star">✦</div>
-                <div>{card.content}</div>
+                <div
+                  className="star"
+                  style={{
+                    textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
+                  }}
+                >
+                  ✦
+                </div>
+                <div className="cardContent">{card.content}</div>
               </button>
             )}
           </div>
