@@ -55,7 +55,7 @@ html, body, h1, h2, h3, p {
 
 @font-face {
   font-family: lemon;
-  src: url(/public/LEMONMILK-Medium.otf);
+  src: url(/LEMONMILK-Medium.otf);
 }
 
 * {
@@ -68,6 +68,16 @@ html, body, h1, h2, h3, p {
   display: none;
 }
 
+@mixin flexBox($direction: row) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: calc(2vh + 2vw);
+}
 
 // ╔══════════════════════╗
 // ║   Main Container     ║
@@ -87,181 +97,577 @@ html, body, h1, h2, h3, p {
 // ║   App Container   ║
 // ╚═══════════════════╝
 
-.app {
-  display: flex;
-  height: 100%;
-  width: 100%;
+.App {
+  @include flexBox();
+  height: 100vh;
+  width: 100vw;
   background-color: rgb(32, 32, 32);
+  overflow: hidden
 }
 
-// ╔════════════════════════╗
-// ║   ImageBox Container   ║
-// ╚════════════════════════╝
+// ╔════════════════╗
+// ║   App layout   ║
+// ╚════════════════╝
 
-.imageBox {
-  position: relative;
-  width: 30%;
+.mainPage {
+  @include flexBox();
+  width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  
-  .imageOverlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    opacity: $image-opacity;
-    filter: blur($blur-filter);
-  }
-
-  .image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
+  box-sizing: border-box;
 }
 
-// ╔═══════════════════╗     // ╔═════════════════════╗
-// ║   Box Container   ║     // ║   Cards Container   ║
-// ╚═══════════════════╝     // ╚═════════════════════╝
-
-.box {
+.contentsBox {
+  width: 70%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 70%;
-
-  .tabs {
-    display: flex;
-    justify-content: space-evenly;
-    background-color: rgba(0, 0, 0, 0);
-    color: $text-color;
-  }
-
-  .cards {
-    display: flex;
-    max-height: 100%;
-    overflow: hidden;
-
-    .cardBox, .memoirBox {
-      display: flex;
-      flex-direction: column;
-      height: calc(23vh + 23vw);
-      overflow-y: scroll;
-    }
-  }
 }
 
+
+.contents {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+}
+
+
+.imagesBox {
+  background-color: lightblue;
+  width: 30%;
+  height: 100%;
+}
+
+.themeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.tabsContainer {
+  width: 50%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  padding: 5%;
+  gap: 5%;
+}
+
+.notes {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.tasks {
+  width: 50%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
 // ╔═══════════╗
 // ║   Tasks   ║
 // ╚═══════════╝
 
 .tasks {
-  width: 50%;
-  padding: calc(2vh + 2vw);
-
-  .input {
-    background-color: $input-background;
-    width: max-content;
-    border: none;
-    border-radius: $border-radius 0 0 $border-radius;
-    padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
-    margin: calc(1vh + 1vw) 0;
-  }
-
-  .cardBox, .memoirBox {
-    overflow-y: scroll;
-  }
-
-  .card {
-    display: flex;
-    background-color: $card-bg;
-    padding: $card-padding;
-    margin: $card-margin 0;
-    border-radius: $border-radius;
-    width: 100%;
-    font-size: $font-size;
-    border: calc(0.1vh + 0.1vw) solid pink;
-    text-align: left;
-    color: $text-color;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+  gap: 5%;
 }
 
-.cardContent, .memoirContent {
-  font-size: calc(0.5vh + 0.5vw);
-
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
 }
 
-.cardInput {
+.mainForm {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.mainFormInput {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: $border-radius;
+}
+
+.mainInput {
+  background-color: $input-background;
+  border: none;
+  box-sizing: border-box;
+  border-radius: $border-radius 0 0 $border-radius;
+  padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+  font-size: calc(0.7vh + 0.7vw);
+  width: 100%;
+}
+
+.mainInput:focus {
+  border: none;
+  outline: none;
+}
+
+.mainSubmit {
+  background-color: $input-background;
+  border-radius: 0 $border-radius $border-radius 0;
+  padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+  font-size: calc(0.9vh + 0.9vw);
+
+  box-sizing: border-box;
   width: max-content;
+  border: none;
+  color: white;
+}
+
+.cardsBox, .memoirBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.card, .memoir {
   display: flex;
   background-color: $card-bg;
   padding: $card-padding;
-  margin: $card-margin 0;
   border-radius: $border-radius;
-  font-size: calc(0.5vh + 0.5vw);
+  width: 100%;
+  font-size: $font-size;
   border: calc(0.1vh + 0.1vw) solid pink;
+  text-align: left;
+  color: $text-color;
+  font-size: calc(0.7vh + 0.7vw);
+  }
+
+  .star {
+    margin-right: calc(1vh + 1vw);
+    font-size:  calc(0.7vh + 0.7vw);
+  }
+
+  .changeBtnSave {
+    width: 100%;
+    border-radius: 0 $border-radius 0 0 !important;
+  }
+
+  .changeBtnDelete {
+    border-radius: 0 0 $border-radius 0 !important;
+    width: 100%;
+  }
+
+// ╔═══════════╗
+// ║   Notes   ║
+// ╚═══════════╝
+
+// ╔═══════════╗
+// ║   Image   ║
+// ╚═══════════╝
+
+
+
+// ╔══════════════╗
+// ║   Tabs Bar   ║
+// ╚══════════════╝
+
+.tabs {
+  display: flex;
+  background-color: rgb(27, 27, 27);
+  box-sizing: border-box;
+  justify-content: space-between;
+  padding: calc(0.5vh + 0.5vw) 0;
+}
+
+.tab {
+  font-size: calc(0.7vh + 0.7vw);
+  background-color: transparent;
+  color: white;
+  border: none;
+  flex: 1;
+  transition: text-shadow 0.5s ease;
+}
+
+.buttonSection {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  top: 0; 
+  left: 0;
+  right: 0;
+  z-index: 10;
+  gap: 5%;
+  margin-right: calc(1vh + 1vw);
+}
+
+.tabs1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  color: white;
+  font-size: calc(0.7vh + 0.7vw);
+  background-color: rgba(27, 27, 27, 0);
+  box-sizing: border-box;
+  padding: calc(0.5vh + 0.5vw) 0;
+}
+
+
+// ╔════════════╗
+// ║   Themes   ║
+// ╚════════════╝
+
+
+.themesContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  @include flexBox();
+  backdrop-filter: brightness(0.3);
+  padding: calc(3vh + 3vw);
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.themeBox {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.mainThemeBox {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  background-color: $background-color;
+  margin: calc(0.5vh + 0.5vw); 
+  padding: calc(1vh + 1vw);
+  border-radius: $border-radius;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(20vw, 20vh), 1fr));
+  gap: calc(0.5vh + 0.5vw);
+}
+
+.themesBox {
+  display: flex;
+  aspect-ratio: 16 / 9; 
+  overflow: hidden; 
+  margin: calc(0.5vh + 0.5vw); 
+  border-radius: $border-radius;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  padding: 0;
+  justify-content: space-evenly;
+  background-color: transparent;
+  background-size: cover;
+}
+
+.themeImageBox, .themeColor {
+  flex: 1; 
+}
+
+.themeImageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.themeColor {
+  width: 100%;
+  height: 100%;
+}
+
+.deleteTheme {
+  font-size: calc(0.5vh + 0.5vw);
+  padding-left: calc(0.5vh + 0.5vw);
+  background-color: transparent;
+  border: none;
+  color: white;
+}
+
+.themeFormBox {
+  margin: calc(0.5vh + 0.5vw); 
+  padding: 5%;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: $border-radius;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  display: flex;
+  gap: 5%;
+  flex-direction: column;
+  background-color: $background-color;
+}
+
+.themeHeader {
+  text-align: center;
+  text-shadow: 0 0 calc(1vh + 1vw) pink;
+}
+
+.imageInput {
+  display: flex;
+  background-color: $card-bg;
+  padding: calc(0.5vh + 0.5vw);
+  margin: calc(0.5vh + 0.5vw) 0; 
+  border-radius: $border-radius;
+  border: calc(0.1vh + 0.1vw) solid pink;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  box-sizing: border-box;
+  font-size: calc(1vh + 1vw);
   text-align: left;
   color: $text-color;
 }
 
-.star {
-  margin-right: calc(1vh + 1vw);
+.themeColorInput {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: $border-radius;
+  width:  calc(2vh + 2vw);
+  height:  100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding:  0;
+  cursor: pointer; 
+  appearance: none; 
+  flex: 1;
+}
+
+.themeText {
+  font-size: calc(1vh + 1vw);
+  display: flex;
+  align-content: center;
+  flex: 1;
+}
+
+.themeColorInputBox {
+  display: flex;
+  width: 100%;
+  flex: 1;
+}
+
+.addTheme {
+  background-color: rgba(255, 255, 255, 0);
+  border: solid  calc(0.1vh + 0.1vw);
+  border-radius: calc(0.5vh + 0.5vw);
+  padding: calc(0.2vh + 0.2vw) calc(0.6vh + 0.6vw);
+  margin: calc(0.5vh + 0.5vw) 0;
+  color: rgb(255, 255, 255);
+  font-size: calc(0.8vh + 0.8vw);
+  flex: 1;
+}
+
+.mainThemeButton {
+  position: absolute;
+  color: white;
+  text-shadow: 0 0 calc(1vh + 1vw) pink;
+  font-size: calc(3vh + 3vw);
+  z-index: 100;
+  display: flex;
+  width: auto;
+  height: auto;
+  right: 0;
+  top: 0;
+  margin: calc(0.5vh + 0.5vw);
+  background-color: transparent;
+  border: none;
+}
+
+.themeColorInput::-webkit-color-swatch-wrapper {
+  padding:  calc(1vh + 1vw);
+  border-radius: $border-radius;
+}
+
+.themeColorInput::-webkit-color-swatch {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: $border-radius;
+}
+
+.themeColorInput::-moz-color-swatch {
+  border: calc(0.1vh + 0.1vw) solid pink;
+  border-radius: $border-radius;
+}
+
+p {
   font-size: calc(0.5vh + 0.5vw);
 }
 
-.star, h1 {
-  text-shadow: 0 0 calc(1vh + 1vw) pink;
+// ╔════════════════════════╗
+// ║   ImageBox Container   ║
+// ╚════════════════════════╝
 
-}
+// .imageBox {
+//   position: relative;
+//   width: 30%;
+//   height: 100%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   overflow: hidden;
+  
+//   .imageOverlay {
+//     position: absolute;
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//     object-position: center;
+//     opacity: $image-opacity;
+//     filter: blur($blur-filter);
+//   }
 
-h1 {
-  font-size: calc(1.8vh + 1.8vw);
-}
+//   .image {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+//     object-position: center;
+//   }
+// }
+
+// ╔═══════════════════╗     // ╔═════════════════════╗
+// ║   Box Container   ║     // ║   Cards Container   ║
+// ╚═══════════════════╝     // ╚═════════════════════╝
+
+// .box {
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+//   width: 70%;
+
+//   .cards {
+//     display: flex;
+//     max-height: 100%;
+//     overflow: hidden;
+
+//     .cardBox, .memoirBox {
+//       display: flex;
+//       flex-direction: column;
+//       height: calc(23vh + 23vw);
+//       overflow-y: scroll;
+//     }
+//   }
+// }
+
+
+// ╔═══════════╗
+// ║   Tasks   ║
+// ╚═══════════╝
+
+// .tasks {
+//   width: 50%;
+//   padding: calc(2vh + 2vw);
+
+//   .input {
+//     background-color: $input-background;
+//     width: max-content;
+//     border: none;
+//     border-radius: $border-radius 0 0 $border-radius;
+//     padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+//     margin: calc(1vh + 1vw) 0;
+//   }
+
+//   .cardBox, .memoirBox {
+//     overflow-y: scroll;
+//   }
+
+//   .card {
+//     display: flex;
+//     background-color: $card-bg;
+//     padding: $card-padding;
+//     margin: $card-margin 0;
+//     border-radius: $border-radius;
+//     width: 100%;
+//     font-size: $font-size;
+//     border: calc(0.1vh + 0.1vw) solid pink;
+//     text-align: left;
+//     color: $text-color;
+//   }
+// }
+
+// .cardContent, .memoirContent {
+//   font-size: calc(0.5vh + 0.5vw);
+
+// }
+
+// .cardInput {
+//   width: max-content;
+//   display: flex;
+//   background-color: $card-bg;
+//   padding: $card-padding;
+//   margin: $card-margin 0;
+//   border-radius: $border-radius;
+//   font-size: calc(0.5vh + 0.5vw);
+//   border: calc(0.1vh + 0.1vw) solid pink;
+//   text-align: left;
+//   color: $text-color;
+// }
+
+// .star {
+//   margin-right: calc(1vh + 1vw);
+//   font-size: calc(0.5vh + 0.5vw);
+// }
+
+// .star, h1 {
+//   text-shadow: 0 0 calc(1vh + 1vw) pink;
+
+// }
+
+// h1 {
+//   font-size: calc(1.8vh + 1.8vw);
+// }
 
 // ╔═════════════╗
 // ║   Details   ║
 // ╚═════════════╝
 
-.detailsBox {
-  width: 50%;
-  padding: calc(2vh + 2vw) calc(2vh + 2vw) calc(1vh + 1vw) calc(2vh + 2vw);
-  border-left: calc(0.1vh + 0.1vw) solid $input-background;
-  display: flex;
-  flex-direction: column;
+// .detailsBox {
+//   width: 50%;
+//   padding: calc(2vh + 2vw) calc(2vh + 2vw) calc(1vh + 1vw) calc(2vh + 2vw);
+//   border-left: calc(0.1vh + 0.1vw) solid $input-background;
+//   display: flex;
+//   flex-direction: column;
 
-  .memoirInput {
-    display: flex;
-    background-color: $card-bg;
-    padding: $card-padding;
-    margin: $card-margin 0;
-    border-radius: $border-radius;
-    border: calc(0.1vh + 0.1vw) solid pink;
-    width: max-content;
-    font-size: calc(0.5vh + 0.5vw);
-    text-align: left;
-    color: $text-color;
-  }
+//   .memoirInput {
+//     display: flex;
+//     background-color: $card-bg;
+//     padding: $card-padding;
+//     margin: $card-margin 0;
+//     border-radius: $border-radius;
+//     border: calc(0.1vh + 0.1vw) solid pink;
+//     width: max-content;
+//     font-size: calc(0.5vh + 0.5vw);
+//     text-align: left;
+//     color: $text-color;
+//   }
 
-  .memoir {
-    display: flex;
-    background-color: $card-bg;
-    padding: $card-padding;
-    margin: $card-margin 0;
-    border-radius: $border-radius;
-    border: calc(0.1vh + 0.1vw) solid pink;
-    width: 100%;
-    font-size: $font-size;
-    text-align: left;
-    color: $text-color;
-  }
+//   .memoir {
+//     display: flex;
+//     background-color: $card-bg;
+//     padding: $card-padding;
+//     margin: $card-margin 0;
+//     border-radius: $border-radius;
+//     border: calc(0.1vh + 0.1vw) solid pink;
+//     width: 100%;
+//     font-size: $font-size;
+//     text-align: left;
+//     color: $text-color;
+//   }
 
-}
+// }
 
 
 // ╔══════════════════════╗
@@ -290,90 +696,107 @@ h1 {
   color: white;
 }
 
-// ╔══════════╗
-// ║   Tabs   ║
-// ╚══════════╝
+// ╔════════════╗
+// ║   Habits   ║
+// ╚════════════╝
 
-.tab {
-  background-color: rgb(27, 27, 27);
-  backdrop-filter: blur(calc(1vh + 1vw));
-  border: none;
-  border-radius: calc(0.5vh + 0.5vw);
-  width: fit-content;
-  padding: calc(0.5vh + 0.5vw) calc(2vh + 2vw);
-  margin: calc(0.5vh + 0.5vw);
-  font-size: calc(0.5vh + 0.5vw);
-
-  color: white;
-  text-shadow: 0 0 calc(0.5vh + 0.5vw) pink;
-}
-
-.buttons {
+.mainHabitContainer {
+  box-sizing: border-box;
+  overflow-y: scroll;
   display: flex;
+  flex-direction: column;
+  gap: 5%;
 }
 
-.tabs {
-  background-color: rgb(27, 27, 27);
-  backdrop-filter: blur(calc(1vh + 1vw));
+// ╔═══════════════════╗
+// ║   Habits Layout   ║
+// ╚═══════════════════╝
+
+.cat {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.addHabbitRealButton {
+  background-color: $input-background;
   border: none;
   color: white;
-  text-shadow: 0 0 calc(0.5vh + 0.5vw) pink;
-  font-size: calc(0.5vh + 0.5vw);
-}
-
-// ╔═════════════╗
-// ║   Circles   ║
-// ╚═════════════╝
-
-.circleBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: $border-radius;
+  padding: calc(0.5vh + 0.5vw) calc(1vh + 1vw);
+  font-size: calc(0.7vh + 0.7vw);
   width: 100%;
-  overflow-x: auto;
-  margin: 0;
-  padding: calc(1vh + 1vw);
 }
 
-.circles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill);
-  grid-template-rows: repeat(5, calc(1vh + 1vw));
-  gap: calc(0.3vh + 0.3vw);
-  grid-auto-flow: column;
-  width: calc(1vh + 1vw);
+.addHabitBut {
+  font-size: calc(0.9vh + 0.9vw);
 }
 
-.circ {
-  width: calc(1vh + 1vw);
-  height: calc(1vh + 1vw);
-  border-radius: calc(0.3vh + 0.3vw);
+.habitsContain {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 5%;
 }
 
 .habitBox {
-  overflow-y: scroll;
-  margin: calc(1vh + 1vw) 0;
+  height: 100%; 
+  overflow-y: auto; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  gap: 10%;
 }
 
-.details {
-  height: 100%;
+
+.habitSection {
+  width: 100%;
+  height: auto; 
+  display: flex;
+  flex-direction: column;
+  gap: 5%;
+  box-sizing: border-box;
+  background-color: $background-color;
+  border-radius: calc(1vh + 1vw);
 }
+
+
+// ╔═════════════════════╗
+// ║   Habits Elements   ║
+// ╚═════════════════════╝
+
 
 .habitName {
   font-size: calc(1.3vh + 1.3vw);
-  padding: calc(0.5vh + 0.5vw);
+  box-sizing: border-box;
 }
 
-.habitDet {
-  padding: 0 calc(0.5vh + 0.5vw);
+.habitNameBox {
+  padding: calc(1vh + 1vw);
 }
 
 .habitDetsBox {
   display: flex;
   justify-content: space-between;
+  box-sizing: border-box;
   align-items: center;
+  padding: 0 calc(1vh + 1vw);
+}
+
+.habitDet {
+  font-size: calc(0.7vh + 0.7vw);
 }
 
 .habitButton {
   background-color: white;
   box-shadow: 0 0 calc(1vh + 1vw) pink;
+  box-sizing: border-box;
   border: none;
   border-radius: calc(0.5vh + 0.5vw);
   padding: calc(0.2vh + 0.2vw) calc(0.6vh + 0.6vw);
@@ -382,9 +805,28 @@ h1 {
   font-size: calc(1vh + 1vw);
 }
 
-.habitSection {
-  margin-bottom: calc(2vh + 2vw);
-  width: calc(15.6vh + 15.6vw);
+// ╔═════════════╗
+// ║   Circles   ║
+// ╚═════════════╝
+.circleBox {
+  width: 100%;
+  height: auto; 
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-auto-flow: column; 
+  gap: calc(0.3vh + 0.3vw);
+  overflow-x: auto;
+  overflow-y: hidden; 
+  padding: calc(1vh + 1vw);
+  margin-bottom: calc(0.5vh + 0.5vw);
+}
+
+
+.circles {
+  width: calc(1vh + 1vw);
+  height: calc(1vh + 1vw);
+  border-radius: calc(0.3vh + 0.3vw);
 }
 
 .tasksForm {
@@ -403,6 +845,10 @@ h1 {
   margin-left: calc(1vh + 1vw);
 }
 
+// ╔════════════╗
+// ║   Habits   ║
+// ╚════════════╝
+
 .addHabitButton {
   text-shadow: 0 0 calc(1vh + 1vw) pink;
   font-size: calc(1vh + 1vw);
@@ -413,7 +859,7 @@ h1 {
 }
 
 .habitForm {
-  margin: calc(0.5vh + 0.5vw); 
+  margin-top: calc(1vh + 1vw);
   padding: calc(1vh + 1vw);
   border-radius: $border-radius;
   border: calc(0.1vh + 0.1vw) solid pink;
@@ -429,28 +875,37 @@ h1 {
   margin: calc(0.5vh + 0.5vw) 0; 
   border-radius: $border-radius;
   border: calc(0.1vh + 0.1vw) solid pink;
-  width: max-content;
-  font-size: $font-size;
+  font-size: calc(0.5vh + 0.5vw);
+  width: 100%;
+  box-sizing: border-box;
   text-align: left;
   color: $text-color;
 }
 
+.habitInput:focus {
+  border: white  calc(0.1vh + 0.1vw)  solid;
+  color: white;
+}
+
 .habitSubmit {
-  background-color: white;
-  border: none;
+  background-color: $background-color;
+  border: solid calc(0.1vh + 0.1vw) pink;
   border-radius: calc(0.5vh + 0.5vw);
   padding: calc(0.2vh + 0.2vw) calc(0.6vh + 0.6vw);
   margin: calc(0.5vh + 0.5vw);
-  color: rgb(63, 63, 63);
+  color: rgb(255, 255, 255);
+  font-size: calc(1vh + 1vw);
+}
+
+.habitTextMain {
   font-size: calc(1vh + 1vw);
 }
 
 .habitText {
-  font-size: calc(1vh + 1vw);
+  font-size: calc(0.8vh + 0.8vw);
 }
 
 .habitGoal, .habitColor, .habitNameBox {
-
   display: flex;
   align-items: center;
 }
@@ -458,13 +913,14 @@ h1 {
 .habitColorInput {
   border: calc(0.1vh + 0.1vw) solid pink;
   color: #0e599f;
-  border-radius: calc(1vh + 1vw);
-  width:  calc(2vh + 2vw);
+  border-radius: $border-radius;
+  width:  10%;
   height:  calc(1.5vh + 1.5vw);
+  box-sizing: border-box;
   padding:  0;
   cursor: pointer; 
   appearance: none; 
-  margin-left: calc(1vh + 1vw);
+  margin-left: calc(0.5vh + 0.5vw);
 }
 
 .goalText {
@@ -489,6 +945,7 @@ h1 {
 .deleteHabitButton {
   text-shadow: 0 0 calc(1vh + 1vw) pink;
   font-size: calc(2vh + 2vw);
+  margin-left: calc(1vh + 1vw);
   background-color: transparent;
   border: none;
   color: #ffffff;
@@ -502,15 +959,6 @@ h1 {
   color: white;
 }
 
-.habitTitleBox {
-  display: flex;
-  align-items: center;
-}
-
-.memoirTitleBox, .habitTitleBox {
-  font-size: calc(1.8vh + 1.8vw);
-}
-
 .buttonBoxes {
   display: flex;
   flex-direction: column;
@@ -522,146 +970,16 @@ input {
   color: white;
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 input:focus {
-  outline: white; 
-  border: none;
-}
-
-.mainThemeBox {
-  width: max-content;
-  background-color: $background-color;
-  margin: calc(0.5vh + 0.5vw); 
-  padding: calc(1vh + 1vw);
-  border-radius: $border-radius;
-  border: calc(0.1vh + 0.1vw) solid pink;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.themesBox {
-  display: flex;
-  width: calc(5vh + 5vw);
-  aspect-ratio: 16 / 9; 
-  overflow: hidden; 
-  margin: calc(0.5vh + 0.5vw); 
-  border-radius: $border-radius;
-  border: calc(0.1vh + 0.1vw) solid pink;
-  justify-content: space-evenly;
-  background-color: transparent;
-}
-
-.themeImageBox, .themeColor {
-  flex: 1; 
-}
-
-.themeImageBox img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-}
-
-.themeColor {
-  width: 100%;
-  height: 100%;
-}
-
-.deleteTheme {
-  text-shadow: 0 0 calc(1vh + 1vw) pink;
-  font-size: calc(0.5vh + 0.5vw);
-  background-color: transparent;
-  border: none;
-  color: white;
-}
-
-.themeFormBox {
-  margin: calc(0.5vh + 0.5vw); 
-  padding: calc(1vh + 1vw);
-  width: max-content;
-  border-radius: $border-radius;
-  border: calc(0.1vh + 0.1vw) solid pink;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  background-color: $background-color;
-}
-.imageInput {
-  display: flex;
-  background-color: $card-bg;
-  padding: calc(0.5vh + 0.5vw);
-  margin: calc(0.5vh + 0.5vw) 0; 
-  border-radius: $border-radius;
-  border: calc(0.1vh + 0.1vw) solid pink;
-  width: max-content;
-  font-size: $font-size;
-  text-align: left;
-  color: $text-color;
-}
-
-.themeColorInput {
-  border: calc(0.1vh + 0.1vw) solid pink;
-  border-radius: calc(1vh + 1vw);
-  width:  calc(2vh + 2vw);
-  height:  calc(1.5vh + 1.5vw);
-  padding:  0;
-  cursor: pointer; 
-  appearance: none; 
-  margin-left: calc(1vh + 1vw);
-}
-
-.themeColorInputBox {
-  display: flex;
-}
-
-.addTheme {
-  background-color: white;
-  border: none;
-  border-radius: calc(0.5vh + 0.5vw);
-  padding: calc(0.2vh + 0.2vw) calc(0.6vh + 0.6vw);
-  margin: calc(0.5vh + 0.5vw) 0;
-  color: rgb(91, 91, 91);
-  font-size: calc(1vh + 1vw);
-  
-}
-
-.themeBox {
-  display: flex;
-  justify-self: flex-end;
-  max-width: 100vw;
-  position: absolute;
-  z-index: 1000;
-}
-
-.mainThemeButton {
-  position: absolute;
-  color: white;
-  text-shadow: 0 0 calc(1vh + 1vw) pink;
-  font-size: calc(3vh + 3vw);
-  z-index: 100;
-  display: flex;
-  width: auto;
-  height: auto;
-  right: 0;
-  top: 0;
-  margin: calc(0.5vh + 0.5vw);
-  background-color: transparent;
-  border: none;
-}
-
-.themeColorInput::-webkit-color-swatch-wrapper {
-  padding:  calc(1vh + 1vw);
-  border-radius: calc(1vh + 1vw);
-}
-
-.themeColorInput::-webkit-color-swatch {
-  border: calc(0.1vh + 0.1vw) solid pink;
-  border-radius: calc(1vh + 1vw);
-}
-
-.themeColorInput::-moz-color-swatch {
-  border: calc(0.1vh + 0.1vw) solid pink;
-  border-radius: calc(1vh + 1vw);
-}
-
-p {
-  font-size: calc(0.5vh + 0.5vw);
+  outline: none;
 }

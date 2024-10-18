@@ -1,20 +1,27 @@
+// Models Imports ✦
+import { Memoir } from '../../models/memoir'
+// React Imports ✦
+import { useState } from 'react'
+// Tanstack Imports ✦
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import request from 'superagent'
-import { Memoir } from '../../models/memoir'
-import { useState } from 'react'
 
-interface memoirFormProps {
+interface MemoirsProps {
   themeColor: string
+  setTabType: (newTab: string) => void
 }
 
-const Memoirs = ({ themeColor }: memoirFormProps) => {
+const Memoirs = ({ themeColor, setTabType }: MemoirsProps) => {
+  // React States ✦
   const [memoirContent, setMemoirContent] = useState('')
   const [editMemoirId, setEditMemoirId] = useState<number | null>(null)
   const [text, setText] = useState('')
 
+  // Query Client ✦
   const queryClient = useQueryClient()
 
-  const { data, isPending, isError } = useQuery({
+  // Fetching notes by type ✦
+  const { data } = useQuery({
     queryKey: ['memoirs'],
     queryFn: async () => {
       const response = await request.get('/api/v1/memoirs')
@@ -22,6 +29,7 @@ const Memoirs = ({ themeColor }: memoirFormProps) => {
     },
   })
 
+  // Adding a note ✦
   const mutation = useMutation({
     mutationFn: async (
       newMemoir: Omit<Memoir, 'id' | 'created_at'> & { id?: number },
@@ -33,6 +41,7 @@ const Memoirs = ({ themeColor }: memoirFormProps) => {
     },
   })
 
+  // Deleting a note ✦
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       await request.delete(`/api/v1/memoirs/${id}`)
@@ -42,6 +51,7 @@ const Memoirs = ({ themeColor }: memoirFormProps) => {
     },
   })
 
+  // Editing a note ✦
   const updateMutation = useMutation({
     mutationFn: async (updatedMemoir: { id: number; content: string }) => {
       await request
@@ -56,10 +66,12 @@ const Memoirs = ({ themeColor }: memoirFormProps) => {
     },
   })
 
+  // Handling change for adding content ✦
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMemoirContent(event.target.value)
   }
 
+  // Handling submit ✦
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (editMemoirId !== null) {
@@ -72,64 +84,76 @@ const Memoirs = ({ themeColor }: memoirFormProps) => {
     }
   }
 
+  // Handling submit ✦
   const handleClick = (id: number, content: string) => {
     setEditMemoirId(id)
     setText(content)
   }
 
+  // Handling card changes ✦
   const handleCardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value)
   }
 
-  if (isPending) return <div>Loading...</div>
-  if (isError) return <div>Error loading memoirs</div>
-
   return (
-    <div className="memoirContain">
-      <form onSubmit={handleSubmit}>
+    <div className="notes">
+      <h1 style={{ textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}` }}>
+        Notes&nbsp;
+        <button
+          style={{
+            textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
+          }}
+          className="addHabitButton"
+          onClick={() => setTabType('habits')} // Switch to "Habits"
+        >
+          ✦
+        </button>
+      </h1>
+
+      {/* Form for adding a new note ✦ */}
+      <form onSubmit={handleSubmit} className="mainForm">
         <input
           type="text"
           value={memoirContent}
           onChange={handleChange}
           aria-label="Memoir input"
-          className="input"
+          className="mainInput"
         />
-        <button className="submit" type="submit">
+        {/* Submit button for adding a note ✦ */}
+        <button className="mainSubmit" type="submit">
           ✦
         </button>
       </form>
 
+      {/* Box with all the notes ✦ */}
       <div className="memoirBox">
         {data?.map((memoir: Memoir) => (
-          <div key={memoir.id} className="memoirItem">
+          <div key={memoir.id} className="memoirFormBox">
             {editMemoirId === memoir.id ? (
-              <div className="memoirFormBox">
+              <form
+                onSubmit={handleSubmit}
+                className="mainForm mainFormInput"
+                style={{ borderColor: `${themeColor}` }}
+              >
                 <input
                   type="text"
                   value={text}
                   onChange={handleCardChange}
-                  className="memoirInput"
-                  style={{ borderColor: `${themeColor}` }}
+                  className="mainInput"
                 />
                 <div className="buttonBoxes">
-                  <button
-                    className="submitButton"
-                    type="button"
-                    onClick={() =>
-                      updateMutation.mutate({ id: editMemoirId, content: text })
-                    }
-                  >
+                  <button className="mainSubmit changeBtnSave" type="submit">
                     Save
                   </button>
                   <button
-                    className="submitButton"
+                    className="mainSubmit changeBtnDelete"
                     type="button"
                     onClick={() => deleteMutation.mutate(memoir.id)}
                   >
                     Delete
                   </button>
                 </div>
-              </div>
+              </form>
             ) : (
               <button
                 className="memoir"

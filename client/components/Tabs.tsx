@@ -1,24 +1,34 @@
-interface TabsProps {
-  onTabClick: (type: string) => void
+import Habits from './Habits'
+import Memoirs from './Memoirs'
+import { useState } from 'react'
+
+interface Props {
+  tab: string
   themeColor: string
-  themeImage: string
+  setTabType: (newTab: string) => void
 }
 
-const Tabs = ({ themeColor, onTabClick }: TabsProps) => {
-  const tabTypes = ['daily', 'weekly', 'monthly', 'yearly', 'lifely']
+const Tabs = ({ themeColor, tab, setTabType }: Props) => {
+  const [displayForm, setDisplayForm] = useState(false)
 
   return (
-    <div className="tabs">
-      {tabTypes.map((type) => (
-        <button
-          key={type}
-          style={{ textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}` }}
-          className="tab"
-          onClick={() => onTabClick(type)}
-        >
-          {type.charAt(0).toUpperCase() + type.slice(1)} ✦
-        </button>
-      ))}
+    <div className="tabsContainer">
+      {/* Render Memoirs Component */}
+      {tab === 'memoir' && (
+        <Memoirs themeColor={themeColor} setTabType={setTabType} />
+      )}
+
+      {/* Render Habits Component */}
+      {tab === 'habits' && (
+        <div className="habitsContain">
+          <Habits
+            themeColor={themeColor}
+            displayForm={displayForm}
+            setDisplayForm={setDisplayForm}
+            setTabType={setTabType}
+          />
+        </div>
+      )}
     </div>
   )
 }

@@ -1,20 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import request from 'superagent'
 import { NewHabit } from '../../models/habit'
+
 import React, { useState } from 'react'
 
 interface AddHabitProps {
-  displayForm: boolean
-  setDisplayForm: React.Dispatch<React.SetStateAction<boolean>>
   themeColor: string
+  setTabType: (newTab: string) => void
 }
 
-const AddHabit = ({
-  displayForm,
-  setDisplayForm,
-  themeColor,
-}: AddHabitProps) => {
+const AddHabit = ({ themeColor }: AddHabitProps) => {
   const queryClient = useQueryClient()
+  const [displayForm, setDisplayForm] = useState(false)
+
   const [habitName, setHabitName] = useState('')
   const [habitGoal, setHabitGoal] = useState<number | ''>('')
   const [habitColor, setHabitColor] = useState('#ffffff')
@@ -52,14 +50,22 @@ const AddHabit = ({
   }
 
   return (
-    <div>
+    <div className="cat">
+      <button
+        className="addHabbitRealButton"
+        onClick={() => setDisplayForm(true)}
+        type="submit"
+      >
+        Add Habit
+        <div className="addHabitBut">✦</div>
+      </button>
       {displayForm && (
         <form
           onSubmit={handleSubmit}
           className="habitForm"
           style={{ borderColor: `${themeColor}` }}
         >
-          <p className="habitText">Add A New Habit</p>
+          <p className="habitTextMain">Add A New Habit</p>
           <p className="habitText">Habit Name:</p>
           <input
             style={{ borderColor: `${themeColor}` }}
@@ -76,9 +82,8 @@ const AddHabit = ({
               type="number"
               value={habitGoal === '' ? '' : habitGoal}
               onChange={handleGoalChange}
-              placeholder="Habit Goal"
+              placeholder="Habit Goal Count"
             />
-            <p className="habitText goalText">Days </p>
           </div>
           <div className="habitColor">
             <p className="habitText">Color: </p>
@@ -95,8 +100,7 @@ const AddHabit = ({
             className="habitSubmit"
             type="submit"
             style={{
-              boxShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
-              color: `${themeColor}`,
+              borderColor: `${themeColor}`,
             }}
           >
             Add Habit
@@ -105,8 +109,7 @@ const AddHabit = ({
             className="habitSubmit"
             onClick={() => setDisplayForm(false)}
             style={{
-              boxShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}`,
-              color: `${themeColor}`,
+              borderColor: `${themeColor}`,
             }}
           >
             cancel

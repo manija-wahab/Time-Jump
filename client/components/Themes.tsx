@@ -7,12 +7,14 @@ interface DisplayThemeProp {
   setThemeColor: React.Dispatch<React.SetStateAction<string>>
   setThemeImage: React.Dispatch<React.SetStateAction<string>>
   setDisplayTheme: React.Dispatch<React.SetStateAction<boolean>>
+  themeColor: string
 }
 
 const Themes = ({
   setThemeColor,
   setThemeImage,
   setDisplayTheme,
+  themeColor,
 }: DisplayThemeProp) => {
   const [newImage, setNewImage] = useState('')
   const [newColor, setNewColor] = useState('')
@@ -82,61 +84,85 @@ const Themes = ({
   }
 
   return (
-    <div className="themeBox">
-      <form onSubmit={handleSubmit} className="themeFormBox">
-        <p className="habitText">Add Image Url:</p>
-        <input
-          value={newImage}
-          onChange={handleImageChange}
-          className="imageInput"
-        />
-        <div className="themeColorInputBox">
-          <p className="habitText">Select Theme Color:</p>
-          <input
-            type="color"
-            value={newColor}
-            onChange={handleColorChange}
-            className="themeColorInput"
-          />
-        </div>
-
-        <button className="addTheme" type="submit">
-          Add Theme
-        </button>
-        <button
-          className="addTheme"
-          type="button"
-          onClick={() => {
-            console.log('Close button clicked') // Debugging line
-            setDisplayTheme(false)
-          }}
+    <div className="themesContainer">
+      <div className="themeBox">
+        <form
+          onSubmit={handleSubmit}
+          className="themeFormBox"
+          style={{ borderColor: themeColor }}
         >
-          Close
-        </button>
-      </form>
-      <div className="mainThemeBox">
-        {data?.map((theme) => (
-          <div key={theme.id}>
-            <button
-              className="themesBox"
-              onClick={() => handleThemeSelection(theme)}
-            >
-              <div className="themeImageBox">
-                <img className="themeImage" src={theme.image} alt="theme" />
-              </div>
-              <div
-                className="themeColor"
-                style={{ backgroundColor: theme.color }}
-              ></div>
-            </button>
-            <button
-              className="deleteTheme"
-              onClick={() => deleteTheme.mutate(theme.id)}
-            >
-              Delete Theme
-            </button>
+          <h1
+            style={{ textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}` }}
+            className="themeHeader"
+          >
+            Add a new theme ✦
+          </h1>
+
+          <p className="themeText">Add Image Url:</p>
+          <input
+            value={newImage}
+            onChange={handleImageChange}
+            className="imageInput"
+            style={{ borderColor: themeColor }}
+          />
+          <div className="themeText">
+            <p className="themeText">Select Theme Color:</p>
+            <input
+              type="color"
+              value={newColor}
+              onChange={handleColorChange}
+              className="themeColorInput"
+              style={{ borderColor: themeColor }}
+            />
           </div>
-        ))}
+
+          <button
+            className="addTheme"
+            type="submit"
+            style={{ borderColor: themeColor }}
+          >
+            Add Theme
+          </button>
+          <button
+            className="addTheme"
+            style={{ borderColor: themeColor }}
+            type="button"
+            onClick={() => {
+              console.log('Close button clicked') // Debugging line
+              setDisplayTheme(false)
+            }}
+          >
+            Close
+          </button>
+        </form>
+        <div className="mainThemeBox" style={{ borderColor: themeColor }}>
+          {data?.map((theme) => (
+            <div key={theme.id}>
+              <button
+                className="themesBox"
+                onClick={() => handleThemeSelection(theme)}
+                style={{ borderColor: themeColor }}
+              >
+                <div className="themeImageBox">
+                  <img className="themeImage" src={theme.image} alt="theme" />
+                </div>
+                <div
+                  className="themeColor"
+                  style={{ backgroundColor: theme.color }}
+                ></div>
+              </button>
+              <button
+                className="deleteTheme"
+                onClick={() => deleteTheme.mutate(theme.id)}
+                style={{
+                  borderColor: themeColor,
+                }}
+              >
+                Delete Theme
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

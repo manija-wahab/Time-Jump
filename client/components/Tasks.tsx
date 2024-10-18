@@ -1,23 +1,22 @@
-import React, { useState } from 'react'
-import request from 'superagent'
 import { NewCard, Card } from '../../models/card'
+import { useState, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
+import request from 'superagent'
 interface TaskFormProps {
   type: string
   themeColor: string
   themeImage: string
 }
-// style={{textShadow: `0 0 calc(1vh + 1vw) ${themeColor}`}}
-// { themeColor, onTabClick }: TabsProps
 
 const Tasks = ({ themeColor, type }: TaskFormProps) => {
+  // UseStates ✦
   const [task, setTask] = useState('')
-  const [editCardId, setEditCardId] = useState<number | null>(null)
   const [text, setText] = useState('')
+  const [editCardId, setEditCardId] = useState<number | null>(null)
 
   const queryClient = useQueryClient()
 
+  // Fetching cards by type ✦
   const { data } = useQuery({
     queryKey: ['cards', type],
     queryFn: async () => {
@@ -26,6 +25,7 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
     },
   })
 
+  // Editing a card ✦
   const mutation = useMutation({
     mutationFn: async (newCard: NewCard) => {
       await request.post(`/api/v1/cards/${type}`).send(newCard)
@@ -35,6 +35,7 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
     },
   })
 
+  // Deleting a card ✦
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
       await request.delete(`/api/v1/cards/${type}/${id}`)
@@ -44,6 +45,7 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
     },
   })
 
+  // Updating a card ✦
   const updateMutation = useMutation({
     mutationFn: async (updatedCard: { id: number; content: string }) => {
       await request
@@ -55,10 +57,12 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
     },
   })
 
+  // Handling change for setting a task ✦
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTask(event.target.value)
   }
 
+  // Handling submit ✦
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (editCardId !== null) {
@@ -71,53 +75,66 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
     }
   }
 
+  // Handling click ✦
   const handleClick = (id: number, content: string) => {
     setEditCardId(id)
     setText(content)
   }
 
+  // Handling card change ✦
   const handleCardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value)
   }
+
+  // Resetting edit state when the type changes ✦
+  useEffect(() => {
+    setEditCardId(null)
+    setText('')
+  }, [type])
 
   return (
     <div className="tasks">
       <h1 style={{ textShadow: `0 0 calc(0.5vh + 0.5vw) ${themeColor}` }}>
         {type} ✦
       </h1>
-      <form onSubmit={handleSubmit}>
+
+      <form className="mainForm" onSubmit={handleSubmit}>
         <input
           type="text"
           value={task}
           onChange={handleChange}
           aria-label="Task input"
-          className="input"
+          className="mainInput"
         />
-        <button className="submit" type="submit">
+        <button className="mainSubmit" type="submit">
           ✦
         </button>
       </form>
 
-      <div className="cardBox">
+      <div className="cardsBox">
         {data?.map((card: Card) => (
-          <div key={card.id} className="cardItem">
+          <div key={card.id} className="cardsFormBox">
             {editCardId === card.id ? (
               <div>
-                <form onSubmit={handleSubmit} className="tasksForm">
+                <form
+                  onSubmit={handleSubmit}
+                  className="mainForm mainFormInput"
+                  style={{ borderColor: `${themeColor}` }}
+                >
                   <input
                     style={{ borderColor: `${themeColor}` }}
                     type="text"
                     value={text}
                     onChange={handleCardChange}
-                    className="cardInput"
+                    className="mainInput"
                   />
                   <div className="buttonBoxes">
-                    <button className="submitButton" type="submit">
+                    <button className="mainSubmit changeBtnSave" type="submit">
                       Save
                     </button>
                     <button
-                      className="submitButton"
-                      type="button" // Prevents form submission
+                      className="mainSubmit changeBtnDelete"
+                      type="button"
                       onClick={() => deleteMutation.mutate(card.id)}
                     >
                       Delete
