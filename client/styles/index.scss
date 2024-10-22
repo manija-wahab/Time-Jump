@@ -1099,11 +1099,11 @@ input:focus {
 
 .login-text {
   flex-grow: 1;
-  max-width: 100%; /* Ensure it fits within the container */
-  white-space: nowrap; /* Prevent text from wrapping */
-  overflow: hidden; /* Hide overflow if needed */
-  text-overflow: ellipsis; /* Optional: Add ellipsis for overflow */
-  font-size: calc(100% + 2.5vw);
+  width: 100%; 
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  font-size: calc(2vh + 2vw);
     text-shadow: 0 0 calc(0.5vh + 0.5vw) rgb(97, 91, 193);
     text-align: left;
 }
