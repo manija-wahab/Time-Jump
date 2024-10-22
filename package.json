@@ -33,7 +33,8 @@
     "jsonwebtoken": "^9.0.2",
     "knex": "^2.5.1",
     "sqlite3": "^5.1.7",
-    "superagent": "^8.1.2"
+    "superagent": "^8.1.2",
+    "sass": "^1.50.1"
   },
   "devDependencies": {
     "@devacademy/eslint-config": "^1.9.1",
@@ -63,7 +64,6 @@
     "react": "^18.0.2",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
-    "sass": "^1.50.1",
     "supertest": "^6.3.4",
     "tsx": "^3.12.7",
     "typescript": "^5.3.3",
