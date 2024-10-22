@@ -10,7 +10,12 @@ const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const habits = await db.getAllHabits()
+    const username = req.query.username as string
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' })
+    }
+
+    const habits = await db.getAllHabits(username)
     res.json(habits)
   } catch (error) {
     console.error(error)
@@ -24,9 +29,11 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const content = req.body
-    const newHabit = await db.addNewHabit(content)
-    res.json(newHabit)
+    const { username, name, goal, color } = req.body
+
+    const newHabit: NewHabit = { username, name, goal, color }
+    const addedHabit = await db.addNewHabit(newHabit)
+    res.json(addedHabit)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -40,12 +47,13 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { name, goal } = req.body
-    const updatedHabit: Partial<NewHabit> = {
-      name,
-      goal,
+    const { username, name, goal } = req.body
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' })
     }
-    const habit = await db.editHabit(id, updatedHabit)
+
+    const updatedHabit: Partial<NewHabit> = { name, goal }
+    const habit = await db.editHabit(id, username, updatedHabit)
     res.json(habit)
   } catch (error) {
     console.error(error)
@@ -56,7 +64,12 @@ router.patch('/:id', async (req, res) => {
 router.patch('/:id/increment', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const habit = await db.incrementHabitCount(id)
+    const { username } = req.body
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' })
+    }
+
+    const habit = await db.incrementHabitCount(id, username)
     res.json(habit[0])
   } catch (error) {
     console.error(error)
@@ -67,7 +80,12 @@ router.patch('/:id/increment', async (req, res) => {
 router.patch('/:id/decrement', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const habit = await db.decrementHabitCount(id)
+    const { username } = req.body
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' })
+    }
+
+    const habit = await db.decrementHabitCount(id, username)
     res.json(habit[0])
   } catch (error) {
     console.error(error)
@@ -82,7 +100,12 @@ router.patch('/:id/decrement', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteHabit(id)
+    const { username } = req.body
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' })
+    }
+
+    await db.deleteHabit(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)

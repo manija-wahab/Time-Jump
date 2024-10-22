@@ -6,7 +6,8 @@ export async function up(knex) {
   await knex.schema.createTable('weekly', (table) => {
     table.increments('id').primary()
     table.string('content')
-    table.boolean('inProgress').defaultTo(false)
+    table.string('username').notNullable()
+    table.foreign('username').references('username').inTable('users')
   })
 }
 

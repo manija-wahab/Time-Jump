@@ -5,24 +5,42 @@ import { Card, NewCard } from '../../models/card.ts'
 // ║   Get Routes   ║
 // ╚════════════════╝
 
-export async function getAllLifely(db = connection): Promise<Card[]> {
-  return db('lifely').select().orderBy('id', 'desc')
+export async function getAllLifely(
+  username: string,
+  db = connection,
+): Promise<Card[]> {
+  return db('lifely').where('username', username).select().orderBy('id', 'desc')
 }
 
-export async function getAllYearly(db = connection): Promise<Card[]> {
-  return db('yearly').select().orderBy('id', 'desc')
+export async function getAllYearly(
+  username: string,
+  db = connection,
+): Promise<Card[]> {
+  return db('yearly').where('username', username).select().orderBy('id', 'desc')
 }
 
-export async function getAllMonthly(db = connection): Promise<Card[]> {
-  return db('monthly').select().orderBy('id', 'desc')
+export async function getAllMonthly(
+  username: string,
+  db = connection,
+): Promise<Card[]> {
+  return db('monthly')
+    .where('username', username)
+    .select()
+    .orderBy('id', 'desc')
 }
 
-export async function getAllWeekly(db = connection): Promise<Card[]> {
-  return db('weekly').select().orderBy('id', 'desc')
+export async function getAllWeekly(
+  username: string,
+  db = connection,
+): Promise<Card[]> {
+  return db('weekly').where('username', username).select().orderBy('id', 'desc')
 }
 
-export async function getAllDaily(db = connection): Promise<Card[]> {
-  return db('daily').select().orderBy('id', 'desc')
+export async function getAllDaily(
+  username: string,
+  db = connection,
+): Promise<Card[]> {
+  return db('daily').where('username', username).select().orderBy('id', 'desc')
 }
 
 // ╔═════════════════╗
@@ -30,7 +48,7 @@ export async function getAllDaily(db = connection): Promise<Card[]> {
 // ╚═════════════════╝
 
 export async function addLifelyCard(
-  card: NewCard,
+  card: NewCard & { username: string },
   db = connection,
 ): Promise<Card[]> {
   const [insertedId] = await db('lifely').insert(card, ['*'])
@@ -38,7 +56,7 @@ export async function addLifelyCard(
 }
 
 export async function addYearlyCard(
-  card: NewCard,
+  card: NewCard & { username: string },
   db = connection,
 ): Promise<Card[]> {
   const [insertedId] = await db('yearly').insert(card, ['*'])
@@ -46,7 +64,7 @@ export async function addYearlyCard(
 }
 
 export async function addMonthlyCard(
-  card: NewCard,
+  card: NewCard & { username: string },
   db = connection,
 ): Promise<Card[]> {
   const [insertedId] = await db('monthly').insert(card, ['*'])
@@ -54,7 +72,7 @@ export async function addMonthlyCard(
 }
 
 export async function addWeeklyCard(
-  card: NewCard,
+  card: NewCard & { username: string },
   db = connection,
 ): Promise<Card[]> {
   const [insertedId] = await db('weekly').insert(card, ['*'])
@@ -62,7 +80,7 @@ export async function addWeeklyCard(
 }
 
 export async function addDailyCard(
-  card: NewCard,
+  card: NewCard & { username: string },
   db = connection,
 ): Promise<Card[]> {
   const [insertedId] = await db('daily').insert(card, ['*'])
@@ -75,47 +93,52 @@ export async function addDailyCard(
 
 export async function editLifelyCard(
   id: number,
+  username: string,
   updatedCard: Partial<NewCard>,
   db = connection,
 ): Promise<Card[]> {
-  await db('lifely').where('id', id).update(updatedCard)
-  return db('lifely').where('id', id).select()
+  await db('lifely').where({ id, username }).update(updatedCard)
+  return db('lifely').where({ id, username }).select()
 }
 
 export async function editYearlyCard(
   id: number,
+  username: string,
   updatedCard: Partial<NewCard>,
   db = connection,
 ): Promise<Card[]> {
-  await db('yearly').where('id', id).update(updatedCard)
-  return db('yearly').where('id', id).select()
+  await db('yearly').where({ id, username }).update(updatedCard)
+  return db('yearly').where({ id, username }).select()
 }
 
 export async function editMonthlyCard(
   id: number,
+  username: string,
   updatedCard: Partial<NewCard>,
   db = connection,
 ): Promise<Card[]> {
-  await db('monthly').where('id', id).update(updatedCard)
-  return db('monthly').where('id', id).select()
+  await db('monthly').where({ id, username }).update(updatedCard)
+  return db('monthly').where({ id, username }).select()
 }
 
 export async function editWeeklyCard(
   id: number,
+  username: string,
   updatedCard: Partial<NewCard>,
   db = connection,
 ): Promise<Card[]> {
-  await db('weekly').where('id', id).update(updatedCard)
-  return db('weekly').where('id', id).select()
+  await db('weekly').where({ id, username }).update(updatedCard)
+  return db('weekly').where({ id, username }).select()
 }
 
 export async function editDailyCard(
   id: number,
+  username: string,
   updatedCard: Partial<NewCard>,
   db = connection,
 ): Promise<Card[]> {
-  await db('daily').where('id', id).update(updatedCard)
-  return db('daily').where('id', id).select()
+  await db('daily').where({ id, username }).update(updatedCard)
+  return db('daily').where({ id, username }).select()
 }
 
 // ╔═══════════════════╗
@@ -124,35 +147,40 @@ export async function editDailyCard(
 
 export async function deleteLifelyCard(
   id: number,
+  username: string,
   db = connection,
 ): Promise<void> {
-  await db('lifely').where('id', id).del()
+  await db('lifely').where({ id, username }).del()
 }
 
 export async function deleteYearlyCard(
   id: number,
+  username: string,
   db = connection,
 ): Promise<void> {
-  await db('yearly').where('id', id).del()
+  await db('yearly').where({ id, username }).del()
 }
 
 export async function deleteMonthlyCard(
   id: number,
+  username: string,
   db = connection,
 ): Promise<void> {
-  await db('monthly').where('id', id).del()
+  await db('monthly').where({ id, username }).del()
 }
 
 export async function deleteWeeklyCard(
   id: number,
+  username: string,
   db = connection,
 ): Promise<void> {
-  await db('weekly').where('id', id).del()
+  await db('weekly').where({ id, username }).del()
 }
 
 export async function deleteDailyCard(
   id: number,
+  username: string,
   db = connection,
 ): Promise<void> {
-  await db('daily').where('id', id).del()
+  await db('daily').where({ id, username }).del()
 }

@@ -4,14 +4,17 @@ export interface Habit {
   count: number
   goal: number
   color: string
+  username: string
 }
 
 export interface HabitData {
   name: string
+  username: string
 }
 
 export interface NewHabit {
   name: string
   goal: number
   color: string
+  username: string
 }

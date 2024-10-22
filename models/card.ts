@@ -1,14 +1,15 @@
 export interface Card {
   id: number
   content: string
-  inProgress: boolean
+  username: string
 }
 
 export interface CardData {
   content: string
+  username: string
 }
 
 export interface NewCard {
   content: string
-  inProgress: boolean
+  username: string
 }

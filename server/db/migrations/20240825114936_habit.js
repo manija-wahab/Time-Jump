@@ -10,6 +10,8 @@ export async function up(knex) {
     table.integer('goal').defaultTo(100).notNullable()
     table.check('goal >= count')
     table.string('color').notNullable().defaultTo('#ffffff')
+    table.string('username').notNullable()
+    table.foreign('username').references('username').inTable('users')
   })
 }
 

@@ -5,6 +5,7 @@ import cardRoutes from './routes/cards.ts'
 import memoirRoutes from './routes/memoirs.ts'
 import habitRoutes from './routes/habits.ts'
 import themeRoutes from './routes/themes.ts'
+import userRoutes from './routes/users.ts'
 
 const server = express()
 
@@ -14,6 +15,7 @@ server.use('/api/v1/cards', cardRoutes)
 server.use('/api/v1/memoirs', memoirRoutes)
 server.use('/api/v1/habits', habitRoutes)
 server.use('/api/v1/themes', themeRoutes)
+server.use('/api/users', userRoutes)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

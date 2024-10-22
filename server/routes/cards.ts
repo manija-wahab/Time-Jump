@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { NewCard } from '../../models/card.ts'
-
 import * as db from '../db/cards.ts'
 
 const router = Router()
@@ -11,7 +10,8 @@ const router = Router()
 
 router.get('/lifely', async (req, res) => {
   try {
-    const cards = await db.getAllLifely()
+    const { username } = req.query
+    const cards = await db.getAllLifely(username as string)
     res.json(cards)
   } catch (error) {
     console.error(error)
@@ -21,7 +21,8 @@ router.get('/lifely', async (req, res) => {
 
 router.get('/yearly', async (req, res) => {
   try {
-    const cards = await db.getAllYearly()
+    const { username } = req.query
+    const cards = await db.getAllYearly(username as string)
     res.json(cards)
   } catch (error) {
     console.error(error)
@@ -31,7 +32,8 @@ router.get('/yearly', async (req, res) => {
 
 router.get('/monthly', async (req, res) => {
   try {
-    const cards = await db.getAllMonthly()
+    const { username } = req.query
+    const cards = await db.getAllMonthly(username as string)
     res.json(cards)
   } catch (error) {
     console.error(error)
@@ -41,7 +43,8 @@ router.get('/monthly', async (req, res) => {
 
 router.get('/weekly', async (req, res) => {
   try {
-    const cards = await db.getAllWeekly()
+    const { username } = req.query
+    const cards = await db.getAllWeekly(username as string)
     res.json(cards)
   } catch (error) {
     console.error(error)
@@ -51,7 +54,8 @@ router.get('/weekly', async (req, res) => {
 
 router.get('/daily', async (req, res) => {
   try {
-    const cards = await db.getAllDaily()
+    const { username } = req.query
+    const cards = await db.getAllDaily(username as string)
     res.json(cards)
   } catch (error) {
     console.error(error)
@@ -65,10 +69,10 @@ router.get('/daily', async (req, res) => {
 
 router.post('/lifely', async (req, res) => {
   try {
-    const { content } = req.body
+    const { content, username } = req.body
     const newCard: NewCard = {
       content,
-      inProgress: false,
+      username,
     }
     const insertedCard = await db.addLifelyCard(newCard)
     res.json(insertedCard)
@@ -80,10 +84,10 @@ router.post('/lifely', async (req, res) => {
 
 router.post('/yearly', async (req, res) => {
   try {
-    const { content } = req.body
+    const { content, username } = req.body
     const newCard: NewCard = {
       content,
-      inProgress: false,
+      username,
     }
     const insertedCard = await db.addYearlyCard(newCard)
     res.json(insertedCard)
@@ -95,10 +99,10 @@ router.post('/yearly', async (req, res) => {
 
 router.post('/monthly', async (req, res) => {
   try {
-    const { content } = req.body
+    const { content, username } = req.body
     const newCard: NewCard = {
       content,
-      inProgress: false,
+      username,
     }
     const insertedCard = await db.addMonthlyCard(newCard)
     res.json(insertedCard)
@@ -107,12 +111,13 @@ router.post('/monthly', async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
+
 router.post('/weekly', async (req, res) => {
   try {
-    const { content } = req.body
+    const { content, username } = req.body
     const newCard: NewCard = {
       content,
-      inProgress: false,
+      username,
     }
     const insertedCard = await db.addWeeklyCard(newCard)
     res.json(insertedCard)
@@ -121,12 +126,13 @@ router.post('/weekly', async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
+
 router.post('/daily', async (req, res) => {
   try {
-    const { content } = req.body
+    const { content, username } = req.body
     const newCard: NewCard = {
       content,
-      inProgress: false,
+      username,
     }
     const insertedCard = await db.addDailyCard(newCard)
     res.json(insertedCard)
@@ -143,13 +149,17 @@ router.post('/daily', async (req, res) => {
 router.patch('/lifely/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { content, inProgress } = req.body
-    const editedCard: NewCard = {
+    const { content, username } = req.body
+    const updatedCard: Partial<NewCard> = {
       content,
-      inProgress,
     }
-    const updatedCard = await db.editLifelyCard(id, editedCard)
-    res.json(updatedCard)
+    const updated = await db.editLifelyCard(id, username, updatedCard)
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ message: 'Card not found or not authorized' })
+    }
+    res.json(updated)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -159,13 +169,17 @@ router.patch('/lifely/:id', async (req, res) => {
 router.patch('/yearly/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { content, inProgress } = req.body
-    const editedCard: NewCard = {
+    const { content, username } = req.body
+    const updatedCard: Partial<NewCard> = {
       content,
-      inProgress,
     }
-    const updatedCard = await db.editYearlyCard(id, editedCard)
-    res.json(updatedCard)
+    const updated = await db.editYearlyCard(id, username, updatedCard)
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ message: 'Card not found or not authorized' })
+    }
+    res.json(updated)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -175,43 +189,57 @@ router.patch('/yearly/:id', async (req, res) => {
 router.patch('/monthly/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { content, inProgress } = req.body
-    const editedCard: NewCard = {
+    const { content, username } = req.body
+    const updatedCard: Partial<NewCard> = {
       content,
-      inProgress,
     }
-    const updatedCard = await db.editMonthlyCard(id, editedCard)
-    res.json(updatedCard)
+    const updated = await db.editMonthlyCard(id, username, updatedCard)
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ message: 'Card not found or not authorized' })
+    }
+    res.json(updated)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
+
 router.patch('/weekly/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { content, inProgress } = req.body
-    const editedCard: NewCard = {
+    const { content, username } = req.body
+    const updatedCard: Partial<NewCard> = {
       content,
-      inProgress,
     }
-    const updatedCard = await db.editWeeklyCard(id, editedCard)
-    res.json(updatedCard)
+    const updated = await db.editWeeklyCard(id, username, updatedCard)
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ message: 'Card not found or not authorized' })
+    }
+    res.json(updated)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
+
 router.patch('/daily/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { content, inProgress } = req.body
-    const editedCard: NewCard = {
+    const { content, username } = req.body
+    const updatedCard: Partial<NewCard> = {
       content,
-      inProgress,
     }
-    const updatedCard = await db.editDailyCard(id, editedCard)
-    res.json(updatedCard)
+    const updated = await db.editDailyCard(id, username, updatedCard)
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ message: 'Card not found or not authorized' })
+    }
+    res.json(updated)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Something went wrong' })
@@ -225,7 +253,8 @@ router.patch('/daily/:id', async (req, res) => {
 router.delete('/lifely/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteLifelyCard(id)
+    const { username } = req.body
+    await db.deleteLifelyCard(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)
@@ -236,7 +265,8 @@ router.delete('/lifely/:id', async (req, res) => {
 router.delete('/yearly/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteYearlyCard(id)
+    const { username } = req.body
+    await db.deleteYearlyCard(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)
@@ -247,7 +277,8 @@ router.delete('/yearly/:id', async (req, res) => {
 router.delete('/monthly/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteMonthlyCard(id)
+    const { username } = req.body
+    await db.deleteMonthlyCard(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)
@@ -258,7 +289,8 @@ router.delete('/monthly/:id', async (req, res) => {
 router.delete('/weekly/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteWeeklyCard(id)
+    const { username } = req.body
+    await db.deleteWeeklyCard(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)
@@ -269,7 +301,8 @@ router.delete('/weekly/:id', async (req, res) => {
 router.delete('/daily/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteDailyCard(id)
+    const { username } = req.body
+    await db.deleteDailyCard(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)

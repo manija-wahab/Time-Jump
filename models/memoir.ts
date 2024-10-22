@@ -1,14 +1,15 @@
 export interface Memoir {
   id: number
   content: string
-  created_at: Date
+  username: string
 }
 
 export interface MemoirData {
   content: string
+  username: string
 }
 
 export interface NewMemoir {
   content: string
-  created_at: Date
+  username: string
 }

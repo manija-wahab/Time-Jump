@@ -19,32 +19,45 @@ const Themes = ({
   const [newImage, setNewImage] = useState('')
   const [newColor, setNewColor] = useState('')
 
+  const username = localStorage.getItem('loggedUsername') || ''
+
   const queryClient = useQueryClient()
 
   const { data } = useQuery({
-    queryKey: ['themes'],
+    queryKey: ['themes', username],
     queryFn: async () => {
-      const response = await request.get('/api/v1/themes')
+      const response = await request.get(`/api/v1/themes?username=${username}`)
       return response.body as Theme[]
     },
   })
 
   const mutation = useMutation({
     mutationFn: async (newTheme: NewTheme) => {
-      await request.post('/api/v1/themes').send(newTheme)
+      try {
+        await request.post('/api/v1/themes').send({
+          username,
+          image: newTheme.image,
+          color: newTheme.color,
+        })
+      } catch (error) {
+        console.error('Error creating theme:', error)
+        throw error // Re-throw the error to trigger onError if needed
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['themes'] })
+      queryClient.invalidateQueries({ queryKey: ['themes', username] })
     },
   })
 
   const deleteTheme = useMutation({
     mutationFn: async (id: number) => {
-      const response = await request.delete(`/api/v1/themes/${id}`)
+      const response = await request
+        .delete(`/api/v1/themes/${id}`)
+        .send({ username })
       return response.body
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['themes'] })
+      queryClient.invalidateQueries({ queryKey: ['themes', username] })
     },
   })
 
@@ -60,9 +73,11 @@ const Themes = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     mutation.mutate({
       image: newImage,
       color: newColor,
+      username,
     })
   }
 

@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { NewMemoir } from '../../models/memoir.ts'
-
 import * as db from '../db/memoirs.ts'
 
 const router = Router()
@@ -11,7 +10,8 @@ const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const memoirs = await db.getAllMemoirs()
+    const username = req.query.username as string
+    const memoirs = await db.getAllMemoirs(username)
     res.json(memoirs)
   } catch (error) {
     console.error(error)
@@ -25,8 +25,9 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
+    const username = req.body.username
     const content = req.body
-    const newMemoir = await db.addNewMemoir(content)
+    const newMemoir = await db.addNewMemoir({ ...content, username })
     res.json(newMemoir)
   } catch (error) {
     console.error(error)
@@ -41,12 +42,13 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    const { content, created_at } = req.body
-    const editedMemoir: NewMemoir = {
+    const username = req.body.username
+    const { content } = req.body
+    const editedMemoir: Partial<NewMemoir> = {
       content,
-      created_at,
+      username,
     }
-    const updatedMemoir = await db.editMemoir(id, editedMemoir)
+    const updatedMemoir = await db.editMemoir(id, username, editedMemoir)
     res.json(updatedMemoir)
   } catch (error) {
     console.error(error)
@@ -61,7 +63,8 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10)
-    await db.deleteMemoir(id)
+    const { username } = req.body
+    await db.deleteMemoir(id, username)
     res.status(204).send()
   } catch (error) {
     console.error(error)

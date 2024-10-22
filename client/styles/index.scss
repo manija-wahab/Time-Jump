@@ -706,6 +706,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 5%;
+  height: 100%;
 }
 
 // ╔═══════════════════╗
@@ -816,7 +817,7 @@ p {
   grid-template-rows: repeat(4, 1fr);
   grid-auto-flow: column; 
   gap: calc(0.3vh + 0.3vw);
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden; 
   padding: calc(1vh + 1vw);
   margin-bottom: calc(0.5vh + 0.5vw);
@@ -856,7 +857,13 @@ p {
   border: none;
   color: white;
   font-size: calc(2vh + 2vw);
+  position: absolute;
 }
+
+.habitTitleBox {
+  position: relative;
+}
+
 
 .habitForm {
   margin-top: calc(1vh + 1vw);
@@ -982,4 +989,195 @@ input[type="number"] {
 
 input:focus {
   outline: none;
+}
+
+// ╔════════════════╗
+// ║   Login Page   ║
+// ╚════════════════╝
+
+.login-container {
+  background-color: $background-color;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
+
+.login-box1 {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.begin-box {
+  width: 50%;
+  position: absolute;
+  height: 100%;
+  @include flexBox(column);
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  transition: scale 1s ease, background-color 1s;
+}
+
+.begin-box:hover {
+  scale: 1.1;
+  background-color: #000000c3;
+}
+
+.begin-title {
+  border-radius: calc(0.5vh + 0.5vw);
+  font-size: calc(3vh + 3vw);
+  border: none;
+  color: rgb(97, 91, 193);
+  padding: 5%;
+  box-sizing: border-box;
+  text-shadow: calc(0.2vh + 0.2vw) calc(0.2vh + 0.2vw) calc(0.2vh + 0.2vw) rgba(0, 0, 0, 0.381);
+
+}
+
+.login-header {
+  text-shadow: 0 0 calc(1vh + 1vw) rgb(97, 91, 193);
+  color: white;
+}
+
+.login-box2 {
+  width: 50%;
+  height: 100%;
+  padding: 5%;
+  box-sizing: border-box;
+  background-color: $background-color;
+  @include flexBox(column);
+  right: 0%;
+  justify-content: flex-end;
+  position: absolute;
+}
+
+.login-box {
+  width: 100%;
+  height: 100%;
+  padding: 10%;
+  box-sizing: border-box;
+  background-color: $background-color;
+  border-radius: calc(2vh + 2vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  box-shadow: 0 calc(1vh + 1vw) calc(1vh + 1vw) black;
+  border: calc(0.1vh + 0.1vw) solid rgb(97, 91, 193);
+}
+
+.login-img {
+  height: 100%;
+  background-position: center;
+}
+
+.login-title {
+  width: 100%;
+  font-size: calc(2vh + 2vw);
+  text-align: center;
+  color: rgb(97, 91, 193);
+  box-sizing: border-box;
+
+}
+
+.login-form-box {
+  width: 100%;
+  height: 100%;
+  @include flexBox(column);
+  justify-content: space-evenly;
+  gap: 10%;
+  box-sizing: border-box;
+
+}
+
+.login-form {
+  @include flexBox(column);
+  width: 100%;
+  height: 100%;
+  justify-content: space-evenly;
+  gap: 20%;
+  box-sizing: border-box;
+
+}
+
+.login-input-box {
+  @include flexBox(column);
+  width: 100%;
+  height: 100%;
+  justify-content: space-evenly;
+  gap: 20%;
+  box-sizing: border-box;
+
+}
+
+.username-input, .password-input {
+  background-color: transparent;
+  border-radius:  calc(1vh + 1vw);
+  width: 100%;
+  padding: 5%;
+  border: calc(0.1vh + 0.1vw) solid rgb(97, 91, 193);
+  font-size: calc(1vh + 1vw);
+  box-sizing: border-box;
+}
+
+.login-text {
+  font-size: calc(2vh + 2vw);
+  text-align: left;
+  width: 100%;
+  text-shadow: 0 0 calc(0.5vh + 0.5vw) rgb(97, 91, 193);
+  padding: 5% 0;
+  box-sizing: border-box;
+
+}
+
+.login-buttons-container {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+}
+
+.login-btn, .signup-btn {
+  width: 100%;
+  border-radius: calc(0.5vh + 0.5vw);
+  font-size: calc(1vh + 1vw);
+  border: none;
+  background-color: rgba(255, 255, 255, 0);
+  color: rgb(255, 255, 255);
+  padding-top: 5%;
+  box-sizing: border-box;
+}
+
+.submit-btn {
+  width: 100%;
+  height: calc(2vh + 2vw);
+  border-radius: calc(0.5vh + 0.5vw);
+  font-size: calc(1vh + 1vw);
+  border: none;
+  background-color: rgb(255, 255, 255);
+  color: rgb(97, 91, 193);
+  box-sizing: border-box;
+
+}
+
+.login-header {
+  color: white;
+  box-sizing: border-box;
+}
+
+.error-message {
+  font-size: calc(1vh + 1vw);
+  position: absolute;
+  color: rgb(175, 16, 16);
+  text-align: center;
+  margin-bottom: 2%;
+  width: 100%;
+  box-sizing: border-box;
+  bottom: 0;
 }

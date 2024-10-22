@@ -2,6 +2,7 @@ import { NewCard, Card } from '../../models/card'
 import { useState, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import request from 'superagent'
+
 interface TaskFormProps {
   type: string
   themeColor: string
@@ -15,12 +16,15 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
   const [editCardId, setEditCardId] = useState<number | null>(null)
 
   const queryClient = useQueryClient()
+  const username = localStorage.getItem('loggedUsername') || '' // Ensure username is a string
 
   // Fetching cards by type ✦
   const { data } = useQuery({
-    queryKey: ['cards', type],
+    queryKey: ['cards', type, username],
     queryFn: async () => {
-      const response = await request.get(`/api/v1/cards/${type}`)
+      const response = await request
+        .get(`/api/v1/cards/${type}`)
+        .query({ username }) // Pass username as query parameter
       return response.body
     },
   })
@@ -28,20 +32,20 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
   // Editing a card ✦
   const mutation = useMutation({
     mutationFn: async (newCard: NewCard) => {
-      await request.post(`/api/v1/cards/${type}`).send(newCard)
+      await request.post(`/api/v1/cards/${type}`).send({ ...newCard, username }) // Include username
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cards', type] })
+      queryClient.invalidateQueries({ queryKey: ['cards', type, username] })
     },
   })
 
   // Deleting a card ✦
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await request.delete(`/api/v1/cards/${type}/${id}`)
+      await request.delete(`/api/v1/cards/${type}/${id}`).send({ username }) // Include username
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cards', type] })
+      queryClient.invalidateQueries({ queryKey: ['cards', type, username] })
     },
   })
 
@@ -50,10 +54,10 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
     mutationFn: async (updatedCard: { id: number; content: string }) => {
       await request
         .patch(`/api/v1/cards/${type}/${updatedCard.id}`)
-        .send({ content: updatedCard.content })
+        .send({ content: updatedCard.content, username }) // Include username
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cards', type] })
+      queryClient.invalidateQueries({ queryKey: ['cards', type, username] })
     },
   })
 
@@ -70,7 +74,7 @@ const Tasks = ({ themeColor, type }: TaskFormProps) => {
       setEditCardId(null)
       setText('')
     } else {
-      mutation.mutate({ content: task, inProgress: false })
+      mutation.mutate({ content: task, username })
       setTask('')
     }
   }

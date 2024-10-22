@@ -7,6 +7,8 @@ export async function up(knex) {
     table.increments('id').primary()
     table.string('image').notNullable()
     table.string('color').notNullable()
+    table.string('username').notNullable()
+    table.foreign('username').references('username').inTable('users')
   })
 }
 

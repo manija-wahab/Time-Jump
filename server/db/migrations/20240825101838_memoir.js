@@ -7,6 +7,8 @@ export async function up(knex) {
     table.increments('id').primary()
     table.string('content')
     table.timestamp('created_at').defaultTo(knex.fn.now())
+    table.string('username').notNullable()
+    table.foreign('username').references('username').inTable('users')
   })
 }
 

@@ -15,18 +15,24 @@ const Habits = ({ themeColor, setTabType }: AddHabitProps) => {
   const [deleteDisplay, setDeleteDisplay] = useState<Record<number, boolean>>(
     {},
   )
+
   const queryClient = useQueryClient()
+  const username = localStorage.getItem('loggedUsername') || ''
+
   const { data } = useQuery({
     queryKey: ['habits'],
     queryFn: async () => {
-      const response = await request.get('/api/v1/habits')
+      const response = await request.get(`/api/v1/habits?username=${username}`)
       return response.body as Habit[]
     },
   })
 
   const mutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await request.patch(`/api/v1/habits/${id}/increment`)
+      const response = await request
+        .patch(`/api/v1/habits/${id}/increment`)
+        .send({ username })
+
       return response.body
     },
     onSuccess: () => {
@@ -36,7 +42,10 @@ const Habits = ({ themeColor, setTabType }: AddHabitProps) => {
 
   const mutateLess = useMutation({
     mutationFn: async (id: number) => {
-      const response = await request.patch(`/api/v1/habits/${id}/decrement`)
+      const response = await request
+        .patch(`/api/v1/habits/${id}/decrement`)
+        .send({ username })
+
       return response.body
     },
     onSuccess: () => {
@@ -46,7 +55,9 @@ const Habits = ({ themeColor, setTabType }: AddHabitProps) => {
 
   const deleteHabit = useMutation({
     mutationFn: async (id: number) => {
-      const response = await request.delete(`/api/v1/habits/${id}`)
+      const response = await request
+        .delete(`/api/v1/habits/${id}`)
+        .send({ username })
       return response.body
     },
     onSuccess: () => {

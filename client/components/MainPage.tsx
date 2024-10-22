@@ -20,6 +20,9 @@ const MainPage = ({ themeColor, themeImage }: AppThemeProps) => {
     setTab(newTab)
   }
 
+  const username = localStorage.getItem('loggedUsername') || ''
+  console.log('your name is:' + username)
+
   return (
     <div className="mainPage">
       <div className="contentsBox">
