@@ -179,15 +179,10 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="login-box1">
         <button className="begin-box">
-          {display === 'signUp' ? (
-            <h1 className="begin-title">
-              SignUp to <br /> <span className="login-header">TimeJump ✦</span>
-            </h1>
-          ) : (
-            <h1 className="begin-title ">
-              Login to <br /> <span className="login-header">TimeJump ✦</span>
-            </h1>
-          )}
+          <h1 className="begin-title">
+            {display === 'signUp' ? 'SignUp to' : 'Login to'} <br />
+            <span className="login-header">TimeJump ✦</span>
+          </h1>
         </button>
         <img
           src="https://w.wallhaven.cc/full/d6/wallhaven-d6y12l.jpg"
@@ -195,78 +190,62 @@ const LoginPage = () => {
           className="login-img"
         />
       </div>
+
       <div className="login-box2">
         <div className="login-box">
-          <div className="login-form-box">
-            {display === 'signUp' ? (
-              <p className="login-text">Create Account</p>
-            ) : (
-              <p className="login-text">Welcome Back!</p>
-            )}
-            {display === 'signUp' ? (
-              <form className="login-form" onSubmit={handleSignupSubmit}>
-                <div className="login-input-box">
-                  <input
-                    type="text"
-                    value={newUsername}
-                    placeholder="Username"
-                    onChange={handleNewUsernameChange}
-                    className="username-input"
-                  />
-                  <input
-                    type="password"
-                    value={newPassword}
-                    placeholder="Password"
-                    onChange={handleNewPasswordChange}
-                    className="password-input"
-                  />
-                </div>
-                <div className="login-buttons-container">
-                  <button type="submit" className="submit-btn">
-                    Sign Up
-                  </button>
-                  <button
-                    type="button"
-                    className="signup-btn"
-                    onClick={() => setDisplay('login')}
-                  >
-                    I already have an account
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form className="login-form" onSubmit={handleLoginSubmit}>
-                <div className="login-input-box">
-                  <input
-                    type="text"
-                    value={username}
-                    placeholder="Username"
-                    onChange={handleUsernameChange}
-                    className="username-input"
-                  />
-                  <input
-                    type="password"
-                    value={password}
-                    placeholder="Password"
-                    onChange={handlePasswordChange}
-                    className="password-input"
-                  />
-                </div>
-                <div className="login-buttons-container">
-                  <button type="submit" className="submit-btn">
-                    Login
-                  </button>
-                  <button
-                    type="button"
-                    className="login-btn"
-                    onClick={() => setDisplay('signUp')}
-                  >
-                    Create a new account
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+          <p className="login-text">
+            {display === 'signUp' ? 'Create Account' : 'Welcome Back!'}
+          </p>
+
+          <form
+            className="login-form"
+            onSubmit={
+              display === 'signUp' ? handleSignupSubmit : handleLoginSubmit
+            }
+          >
+            <div className="login-input-box">
+              <input
+                type="text"
+                value={display === 'signUp' ? newUsername : username}
+                placeholder="Username"
+                onChange={
+                  display === 'signUp'
+                    ? handleNewUsernameChange
+                    : handleUsernameChange
+                }
+                className="username-input"
+              />
+              <input
+                type="password"
+                value={display === 'signUp' ? newPassword : password}
+                placeholder="Password"
+                onChange={
+                  display === 'signUp'
+                    ? handleNewPasswordChange
+                    : handlePasswordChange
+                }
+                className="password-input"
+              />
+            </div>
+
+            <div className="login-buttons-container">
+              <button type="submit" className="submit-btn">
+                {display === 'signUp' ? 'Sign Up' : 'Login'}
+              </button>
+              <button
+                type="button"
+                className={display === 'signUp' ? 'signup-btn' : 'login-btn'}
+                onClick={() =>
+                  setDisplay(display === 'signUp' ? 'login' : 'signUp')
+                }
+              >
+                {display === 'signUp'
+                  ? 'I already have an account'
+                  : 'Create a new account'}
+              </button>
+            </div>
+          </form>
+
           {signupError && <p className="error-message">{signupError}</p>}
         </div>
       </div>
